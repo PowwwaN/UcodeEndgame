@@ -30,8 +30,8 @@ void initGame() {
 
 void loadAssets() {
   // Додаємо текстури
-    playerTexture = loadTexture("../assets/images/squere.png");
-    enemyTexture = loadTexture("../assets/images/squere2.png");
+    playerTexture = loadTexture("../resource/images/squere.png");
+    enemyTexture = loadTexture("../resource/images/squere2.png");
 }
 
 void update() {

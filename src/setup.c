@@ -1,19 +1,20 @@
-#include "minilibmx.h"
-#include <SDL2/SDL_timer.h>
-#include <time.h>
+#include "../inc/minilibmx.h"
+#include "../inc/hero.h"
 
-struct s_rectangle {
+struct s_hero {
   float x;
   float y;
   float width;
   float height;
-} t_rectangle;
+  float speed;
+} hero;
 
 void setup(){
-  t_rectangle.x = 500; //positition of rectangle by x axis
-  t_rectangle.y = 500; //positition of rectangle by y axis
-  t_rectangle.width = 100; // width of rectangle
-  t_rectangle.height = 100; //height of rectangle
+  hero.x = 500; //positition of rectangle by x axis
+  hero.y = 500; //positition of rectangle by y axis
+  hero.width = 100; // width of rectangle
+  hero.height = 100; //height of rectangle
+  hero.speed = 20; 
 }
 
 void render() {
@@ -21,11 +22,11 @@ void render() {
   SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Background
   SDL_RenderClear(renderer);
 
-  SDL_Rect rectangle_rect = {t_rectangle.x, t_rectangle.y, t_rectangle.width,
-                             t_rectangle.height};
+  SDL_Rect hero_rect = {hero.x, hero.y, hero.width,
+                             hero.height};
 
   SDL_SetRenderDrawColor(renderer, 0, 0, 255, 200); //color of a rectangle
-  SDL_RenderFillRect(renderer, &rectangle_rect); //fills rectangle with predefined size and position
+  SDL_RenderFillRect(renderer, &hero_rect); //fills rectangle with predefined size and position
 
   SDL_RenderPresent(renderer); // shows renderer
 }
@@ -44,6 +45,6 @@ void update() {
   //logic to keep a fixed timestep
   last_frame_time = SDL_GetTicks();
 
-  t_rectangle.x -= 20 * delta_time; 
-  t_rectangle.y -= 10 * delta_time;
+  hero.x -= hero.speed * delta_time; 
+  hero.y -= hero.speed * delta_time;
 }

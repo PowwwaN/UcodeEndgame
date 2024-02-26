@@ -1,4 +1,4 @@
-#include "minilibmx.h"
+#include "../inc/minilibmx.h"
 
 void destroy_window() {
   SDL_DestroyRenderer(renderer);

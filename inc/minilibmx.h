@@ -7,7 +7,9 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_video.h>
+#include <time.h>
 #include <stdio.h>
+#include "hero.h"
 
 #define WINDOW_WIDTH 1000
 #define WINDOW_HEIGHT 800

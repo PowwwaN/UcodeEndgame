@@ -1,4 +1,4 @@
-#include "minilibmx.h"
+#include "../inc/minilibmx.h"
 
 int game_is_running = 0;
 SDL_Window *window = NULL;

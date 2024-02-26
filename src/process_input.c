@@ -1,4 +1,4 @@
-#include "minilibmx.h"
+#include "../inc/minilibmx.h"
 
 void process_input(){
   SDL_Event event;
@@ -13,4 +13,10 @@ void process_input(){
         game_is_running = 0;
       break;
   }
+}
+
+void hero_movement(){
+  SDL_Event event;
+  SDL_PollEvent(&event);
+  // in progress
 }

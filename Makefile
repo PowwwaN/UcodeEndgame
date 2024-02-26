@@ -1,7 +1,7 @@
 NAME = game
 
 CC = clang
-CFLAGS = -Wall -std=c99
+CFLAGS = -Wall -std=c99 -g
 LIBS = -lSDL2 -lSDL2_image -lm
 
 SRC_DIR = src/
@@ -25,6 +25,8 @@ $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
 	rm -rf obj/
+	
+rebuild: clean all
 
 run: $(NAME)
 	./$(NAME)

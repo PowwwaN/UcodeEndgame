@@ -1,11 +1,22 @@
+NAME = -o game
+
+CC = gcc
+CFLAGS = -Wall -std=c99 
+LIBS = -lSDL2 -lm
+
+SRC_DIR = src/
+INC_DIR = inc/
+
+SRCS = $(SRC_DIR)*.c
+INCS = $(INC_DIR)*.h
 all:
-	gcc -Wall -std=c99 ./src/*.c ./inc/*.h `sdl2-config --libs --cflags` -lm -o game
+	$(CC) $(CFLAGS) $(SRCS) $(INCS) $(LIBS) $(NAME)
 
 run:
 	./game
 	
 # Clean rule
-rm:
+clean:
 	rm game
 
 # PHONY rule to avoid conflicts with filenames

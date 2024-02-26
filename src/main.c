@@ -3,6 +3,7 @@
 int game_is_running = 0;
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
+int last_frame_time = 0;
 
 int main(int argc, char *argv[]) {
   game_is_running = initialize_window();

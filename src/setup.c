@@ -1,4 +1,6 @@
 #include "minilibmx.h"
+#include <SDL2/SDL_timer.h>
+#include <time.h>
 
 struct s_rectangle {
   float x;
@@ -29,5 +31,19 @@ void render() {
 }
 
 void update() {
-  // todo
+  //sleep until reach the target frametime (required only if fps capping needed)
+//  int time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - last_frame_time);
+
+/*   if(time_to_wait > 0 && time_to_wait <= FRAME_TARGET_TIME){
+    SDL_Delay(time_to_wait);
+  } */
+  
+  //Get a delta time time factor converted to seconds to be used to update my objects later.
+  float delta_time = (SDL_GetTicks() - last_frame_time) / 1000.0f;
+
+  //logic to keep a fixed timestep
+  last_frame_time = SDL_GetTicks();
+
+  t_rectangle.x -= 20 * delta_time; 
+  t_rectangle.y -= 10 * delta_time;
 }

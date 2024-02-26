@@ -2,7 +2,7 @@ NAME = game
 
 CC = gcc
 CFLAGS = -Wall -std=c99 
-LIBS = -lSDL2 -lm
+LIBS = -lSDL2 -lSDL2_image -lm
 
 SRC_DIR = src/
 INC_DIR = inc/

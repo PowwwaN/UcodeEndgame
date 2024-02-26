@@ -1,5 +1,7 @@
 #include "../inc/minilibmx.h"
 
+#define HERO_SPEED 150
+
 void setup() {
   hero.x = 500;      // positition of rectangle by x axis
   hero.y = 500;      // positition of rectangle by y axis
@@ -40,39 +42,19 @@ void update() {
   // logic to keep a fixed timestep
   last_frame_time = SDL_GetTicks();
 
-  SDL_Event event;
-  while (SDL_PollEvent(&event)) {
-    switch (event.type) {
-    case SDL_KEYDOWN:
-      switch (event.key.keysym.sym) {
-      case SDLK_w:
-        hero.yspeed = 300;
-        break;
-      case SDLK_s:
-        hero.yspeed = -300;
-        break;
-      case SDLK_a:
-        hero.xspeed = 300;
-        break;
-      case SDLK_d:
-        hero.xspeed = -300;
-        break;
-      }
-      break;
-    case SDL_KEYUP:
-      switch (event.key.keysym.sym) {
-      case SDLK_w:
-      case SDLK_s:
-        hero.yspeed = 0;
-        break;
-      case SDLK_a:
-      case SDLK_d:
-        hero.xspeed = 0;
-        break;
-      }
-      break;
-    }
-  }
+  // hero movement
+  const Uint8 *state = SDL_GetKeyboardState(NULL);
+    if (state[SDL_SCANCODE_W])
+        hero.yspeed = HERO_SPEED;
+    else if (state[SDL_SCANCODE_S])
+        hero.yspeed = -HERO_SPEED;
+        else hero.yspeed = 0;
+
+    if (state[SDL_SCANCODE_A])
+        hero.xspeed = HERO_SPEED;
+    else if (state[SDL_SCANCODE_D])
+        hero.xspeed = -HERO_SPEED;
+    else hero.xspeed = 0;
 
   hero.x -= hero.xspeed * delta_time;
   hero.y -= hero.yspeed * delta_time;

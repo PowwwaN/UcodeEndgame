@@ -1,23 +1,37 @@
 NAME = game
 
-CC = gcc
-CFLAGS = -Wall -std=c99 
+CC = clang
+CFLAGS = -Wall -std=c99
 LIBS = -lSDL2 -lSDL2_image -lm
 
 SRC_DIR = src/
-INC_DIR = inc/
+OBJ_DIR = obj/
 
-SRCS = $(SRC_DIR)*.c
-INCS = $(INC_DIR)*.h
-all:
-	$(CC) $(CFLAGS) $(SRCS) $(INCS) $(LIBS) -o $(NAME)
+SRCS = $(wildcard $(SRC_DIR)*.c)
+OBJS = $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 
-run:
+all: $(NAME)
+
+# Create obj directory if it doesn't exist
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
+# Compile each source file into object files and move them to obj directory
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+ 
+# Link object files into the executable
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+
+	rm -rf obj/
+
+run: $(NAME)
 	./$(NAME)
-	
+
 # Clean rule
 clean:
-	rm $(NAME)
+	rm -f $(NAME) $(OBJS)
 
 # PHONY rule to avoid conflicts with filenames
-.PHONY: all clean test
+.PHONY: all clean run test

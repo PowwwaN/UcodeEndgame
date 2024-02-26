@@ -1,4 +1,4 @@
-NAME = -o game
+NAME = game
 
 CC = gcc
 CFLAGS = -Wall -std=c99 
@@ -10,14 +10,14 @@ INC_DIR = inc/
 SRCS = $(SRC_DIR)*.c
 INCS = $(INC_DIR)*.h
 all:
-	$(CC) $(CFLAGS) $(SRCS) $(INCS) $(LIBS) $(NAME)
+	$(CC) $(CFLAGS) $(SRCS) $(INCS) $(LIBS) -o $(NAME)
 
 run:
-	./game
+	./$(NAME)
 	
 # Clean rule
 clean:
-	rm game
+	rm $(NAME)
 
 # PHONY rule to avoid conflicts with filenames
 .PHONY: all clean test

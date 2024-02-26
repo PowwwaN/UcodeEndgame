@@ -6,7 +6,8 @@ struct s_hero {
   float y;
   float width;
   float height;
-  float speed;
+  float xspeed;
+  float yspeed;
 } hero;
 
 void setup(){
@@ -14,7 +15,8 @@ void setup(){
   hero.y = 500; //positition of rectangle by y axis
   hero.width = 100; // width of rectangle
   hero.height = 100; //height of rectangle
-  hero.speed = 20; 
+  hero.xspeed = 0; 
+  hero.yspeed = 0;
 }
 
 void render() {
@@ -33,11 +35,11 @@ void render() {
 
 void update() {
   //sleep until reach the target frametime (required only if fps capping needed)
-//  int time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - last_frame_time);
+  int time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - last_frame_time);
 
-/*   if(time_to_wait > 0 && time_to_wait <= FRAME_TARGET_TIME){
+  if(time_to_wait > 0 && time_to_wait <= FRAME_TARGET_TIME){
     SDL_Delay(time_to_wait);
-  } */
+  } 
   
   //Get a delta time time factor converted to seconds to be used to update my objects later.
   float delta_time = (SDL_GetTicks() - last_frame_time) / 1000.0f;
@@ -45,6 +47,40 @@ void update() {
   //logic to keep a fixed timestep
   last_frame_time = SDL_GetTicks();
 
-  hero.x -= hero.speed * delta_time; 
-  hero.y -= hero.speed * delta_time;
+  SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym) {
+                    case SDLK_w:
+                        hero.yspeed = 300;
+                        break;
+                    case SDLK_s:
+                        hero.yspeed = -300;
+                        break;
+                    case SDLK_a:
+                        hero.xspeed = 300;
+                        break;
+                    case SDLK_d:
+                        hero.xspeed = -300;
+                        break;
+                }
+                break;
+            case SDL_KEYUP:
+                switch (event.key.keysym.sym) {
+                    case SDLK_w:
+                    case SDLK_s:
+                        hero.yspeed = 0;
+                        break;
+                    case SDLK_a:
+                    case SDLK_d:
+                        hero.xspeed = 0;
+                        break;
+                }
+                break;
+        }
+    }
+  
+  hero.x -= hero.xspeed * delta_time; 
+  hero.y -= hero.yspeed * delta_time;
 }

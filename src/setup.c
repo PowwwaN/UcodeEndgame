@@ -1,15 +1,6 @@
 #include "../inc/minilibmx.h"
 #include "../inc/hero.h"
 
-struct s_hero {
-  float x;
-  float y;
-  float width;
-  float height;
-  float xspeed;
-  float yspeed;
-} hero;
-
 void setup(){
   hero.x = 500; //positition of rectangle by x axis
   hero.y = 500; //positition of rectangle by y axis

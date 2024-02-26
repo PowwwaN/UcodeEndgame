@@ -1,5 +1,7 @@
 #include "../inc/minilibmx.h"
 
+struct s_hero hero;
+
 int game_is_running = 0;
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;

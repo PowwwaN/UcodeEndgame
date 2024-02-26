@@ -7,6 +7,7 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_video.h>
+#include <SDL2/SDL_image.h>
 #include <time.h>
 #include <stdio.h>
 #include "hero.h"
@@ -23,10 +24,21 @@ void process_input(void);
 void update(void);
 void render(void);
 void destroy_window(void);
+SDL_Texture *loadTexture(char *filename);
 
 extern int game_is_running; // = 0
 extern SDL_Window *window; //NULL
 extern SDL_Renderer *renderer; //NULL
 extern int last_frame_time;
+
+struct s_hero {
+  float x;
+  float y;
+  float width;
+  float height;
+  float xspeed;
+  float yspeed;
+};
+extern struct s_hero hero;
 
 #endif

@@ -1,7 +1,6 @@
 #include "../inc/minilibmx.h"
 
-
-
+#define HERO_SPEED 150
 
 void setup() {
   hero.x = 500;      // positition of rectangle by x axis
@@ -119,6 +118,19 @@ void update() {
       break;
     }
   }
+  // hero movement
+  const Uint8 *state = SDL_GetKeyboardState(NULL);
+    if (state[SDL_SCANCODE_W])
+        hero.yspeed = HERO_SPEED;
+    else if (state[SDL_SCANCODE_S])
+        hero.yspeed = -HERO_SPEED;
+        else hero.yspeed = 0;
+
+    if (state[SDL_SCANCODE_A])
+        hero.xspeed = HERO_SPEED;
+    else if (state[SDL_SCANCODE_D])
+        hero.xspeed = -HERO_SPEED;
+    else hero.xspeed = 0;
 
   hero.x -= hero.xspeed * delta_time;
   hero.y -= hero.yspeed * delta_time;

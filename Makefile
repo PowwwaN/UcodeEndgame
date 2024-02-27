@@ -32,7 +32,7 @@ run: $(NAME)
 	./$(NAME)
 
 # Clean rule
-clean:
+rm:
 	rm -f $(NAME) $(OBJS)
 
 # PHONY rule to avoid conflicts with filenames

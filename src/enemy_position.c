@@ -50,12 +50,12 @@ void update_enemy_position(Enemy *enemy, Hero *hero) {  // func to enemy follow 
     }
 
     // Set the speed
-    float speed = 150;
+    float speed = 5;
 
 
     // Move the enemy towards the hero
-    enemy->x -= (dx * speed);
-    enemy->y -= (dy * speed);
+    enemy->x += dx * speed;
+    enemy->y += dy * speed;
 
 }
 

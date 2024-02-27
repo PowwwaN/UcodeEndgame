@@ -35,33 +35,11 @@ float distance_between_points(int x1, int y1, int x2, int y2) {  // distance bet
     return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 }
 
-//void update_enemy_position(Enemy *enemy, Hero *hero) {  // func to enemy follow hero
-//
-//    float dx = hero->x - enemy->x;
-//    float dy = hero->y - enemy->y;
-//
-//    // Calculate the distance between enemy and hero
-//    float distance = sqrt(dx * dx + dy * dy);
-//
-//    // Normalize the direction vector
-//    if (distance != 0) {
-//        dx /= distance;
-//        dy /= distance;
-//    }
-//
-//    // Set the speed
-//
-//    float speed = ENEMY_SPEED;
-//    // Move the enemy towards the hero
-//    enemy->x += dx * speed;
-//    enemy->y += dy * speed;
-//}
-
 float calculate_dx(Enemy *enemy, Hero *hero) {
-    return hero->x - enemy->x;
+    return (hero->x + 60) - enemy->x;
 }
 
 float calculate_dy(Enemy *enemy, Hero *hero) {
-    return hero->y - enemy->y;
+    return (hero->y + 60) - enemy->y;
 }
 

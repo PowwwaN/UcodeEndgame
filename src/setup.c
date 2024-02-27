@@ -129,8 +129,6 @@ void update() {
 
     // Update the enemy position
     for (int i = 0; i < num_enemies; i++) {
-//        update_enemy_position(&enemies[i], &hero);
-
         enemies[i].x += (calculate_dx(&enemies[i], &hero) * enemies[i].xspeed) * (delta_time / 15);
         enemies[i].y += (calculate_dy(&enemies[i], &hero) * enemies[i].yspeed) * (delta_time / 15);
     }

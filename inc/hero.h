@@ -28,7 +28,7 @@ struct s_bullet {
   float y;
   float width;
   float height;
-  SDL_Point direction;
+  SDL_FPoint direction;
   float speed;
   unsigned int lifetime;
   unsigned int create_time;

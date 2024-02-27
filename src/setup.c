@@ -83,6 +83,7 @@ void render() {
   }
   // Перевірка колізії куль із ворогами
 while (bullet != NULL) {
+    if (bullet->active) {
         SDL_Rect bullet_rect = {bullet->x, bullet->y, bullet->width, bullet->height};
         for (int i = 0; i < num_enemies; ++i) {
             if (enemies[i].active) {
@@ -90,9 +91,11 @@ while (bullet != NULL) {
                 if (SDL_HasIntersection(&bullet_rect, &enemy_rect)) {
                     // Обробка колізії кулі та ворога тут
                     enemies[i].active = false; // Ворог знищений
+                    bullet->active = false; // Куля видалена
                     break; // Виходимо з циклу, якщо колізія вже виявлена
                 }
             }
+        }
     }
     bullet = bullet->next_bullet;
 }
@@ -118,12 +121,11 @@ void update() {
 
   
   // hero movement
-  hero_movement();
   
   hero.x -= hero.xspeed * delta_time;
   hero.y -= hero.yspeed * delta_time;
    
-  bullets();
+  process_bullets();
 
  
 
@@ -133,3 +135,36 @@ void update() {
           
     }
 }
+void process_bullets(void){
+ struct s_bullet* bullet = bullets_list;
+  for(;bullet!=NULL;)
+  {
+    if(last_frame_time - bullet->create_time > bullet->lifetime)
+    {
+      if(bullet->next_bullet != NULL){
+        bullet->next_bullet->previous_bullet = bullet->previous_bullet;
+      }
+      if(bullet->previous_bullet != NULL){
+        bullet->previous_bullet->next_bullet = bullet->next_bullet;
+      }
+      struct s_bullet* next_bullet = bullet->next_bullet;
+      if(bullet == bullets_list){
+        if(bullet->next_bullet != NULL){
+          bullets_list = bullet->next_bullet;
+        } 
+        else{
+          bullets_list = NULL;
+        }
+      }
+      free(bullet);
+      bullet = next_bullet;
+      continue;
+    }
+    bullet->x += bullet->direction.x * bullet->speed;
+    bullet->y += bullet->direction.y * bullet->speed;
+    bullet = bullet->next_bullet;
+
+
+  }
+}
+

@@ -1,10 +1,16 @@
 #include "../inc/minilibmx.h"
+#include "../inc/hero.h"
 
 void process_input() {
   SDL_Event event;
   SDL_PollEvent(&event);
-
+  hero_movement();
   switch (event.type) {
+  case SDL_MOUSEBUTTONDOWN:
+    if(event.button.button == SDL_BUTTON_LEFT){
+      create_bullet();
+    }
+    break;
   case SDL_QUIT:
     game_is_running = 0;
     break;
@@ -42,13 +48,13 @@ hero.xspeed = 0;
 hero.lastDirection.x = 0;
 }
 }
-
-void bullets(void){
-   //bullets
-const Uint8 *state = SDL_GetKeyboardState(NULL);
-if (state[SDL_SCANCODE_SPACE]){
+void create_bullet(void){
+   
     // Виправлення проблеми з ініціалізацією структури hero
-    printf(""); // Видалено зайвий printf
+  if(SDL_GetTicks() - hero.last_shoot_time < hero.reload_time){
+    return;
+  }
+  hero.last_shoot_time = SDL_GetTicks();
 
     struct s_bullet* new_bullet_ptr = malloc(sizeof(struct s_bullet));
     if (new_bullet_ptr == NULL) {
@@ -61,7 +67,13 @@ if (state[SDL_SCANCODE_SPACE]){
     new_bullet_ptr->y = hero.y;
     new_bullet_ptr->width = 20;
     new_bullet_ptr->height = 20;
-    new_bullet_ptr->direction = hero.lastDirection;
+
+    SDL_Point mouse_position;
+    SDL_GetMouseState(&mouse_position.x, &mouse_position.y);
+    double angle = atan2f(mouse_position.y - hero.y, mouse_position.x - hero.x);
+
+    new_bullet_ptr->direction.x = cosf(angle);
+    new_bullet_ptr->direction.y = sinf(angle);
     new_bullet_ptr->speed = 5;
     new_bullet_ptr->create_time = last_frame_time;
     new_bullet_ptr->lifetime = 2000;
@@ -74,37 +86,4 @@ if (state[SDL_SCANCODE_SPACE]){
         bullets_list->previous_bullet = new_bullet_ptr;
     }
     bullets_list = new_bullet_ptr;
-}
-
-  struct s_bullet* bullet = bullets_list;
-  for(;bullet!=NULL;)
-  {
-    if(last_frame_time - bullet->create_time > bullet->lifetime)
-    {
-     // printf("%u - %u", last_frame_time, bullet->create_time);
-      if(bullet->next_bullet != NULL){
-        bullet->next_bullet->previous_bullet = bullet->previous_bullet;
-      }
-      if(bullet->previous_bullet != NULL){
-        bullet->previous_bullet->next_bullet = bullet->next_bullet;
-      }
-      struct s_bullet* next_bullet = bullet->next_bullet;
-      if(bullet == bullets_list){
-        if(bullet->next_bullet != NULL){
-          bullets_list = bullet->next_bullet;
-        } 
-        else{
-          bullets_list = NULL;
-        }
-      }
-      free(bullet);
-      bullet = next_bullet;
-      continue;
-    }
-    bullet->x += bullet->direction.x * bullet->speed;
-    bullet->y += bullet->direction.y * bullet->speed;
-    bullet = bullet->next_bullet;
-  }
-
-
 }

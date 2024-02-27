@@ -9,18 +9,19 @@ typedef struct {
 	SDL_Texture *texture;
 } Entity;
 
-struct s_hero {
+typedef struct s_hero {
   float x;
   float y;
   float width;
   float height;
+  SDL_Texture *texture;
   float xspeed;
   float yspeed;
   unsigned int last_shoot_time;
   unsigned int reload_time;
   SDL_Point lastDirection;
-};
-extern struct s_hero hero;
+} Hero;
+extern Hero hero;
 
 struct s_bullet {
   float x;
@@ -33,10 +34,16 @@ struct s_bullet {
   unsigned int create_time;
   struct s_bullet* next_bullet;
   struct s_bullet* previous_bullet;
+  bool active;
 };
 extern struct s_bullet* bullets_list;
 
 
-#define HERO_SPEED 150
+SDL_Texture *loadTexture(char *filename);
+void blit(SDL_Texture *texture, int x, int y);
+
+#define HERO_SPEED 450
+#define HERO_WIDTH 47
+#define HERO_HEIGHT 78
 
 #endif

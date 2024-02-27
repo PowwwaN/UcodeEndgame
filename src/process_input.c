@@ -16,9 +16,11 @@ void process_input() {
 }
 
 void hero_movement(void) {
-  const Uint8 *state = SDL_GetKeyboardState(NULL);
-  if (state[SDL_SCANCODE_W]){
-    hero.yspeed = +HERO_SPEED; 
+
+const Uint8 *state = SDL_GetKeyboardState(NULL);
+
+if (state[SDL_SCANCODE_W]){
+    hero.yspeed = HERO_SPEED; 
     hero.lastDirection.y = -1;
 }
 else if (state[SDL_SCANCODE_S]){
@@ -55,16 +57,17 @@ if (state[SDL_SCANCODE_SPACE]){
         return;
     }
     
-    new_bullet_ptr->x = hero.x;
-    new_bullet_ptr->y = hero.y;
+    new_bullet_ptr->x = hero.x - 10;
+    new_bullet_ptr->y = hero.y + 40;
     new_bullet_ptr->width = 20;
     new_bullet_ptr->height = 20;
     new_bullet_ptr->direction = hero.lastDirection;
-    new_bullet_ptr->speed = 5;
+    new_bullet_ptr->speed = 7;
     new_bullet_ptr->create_time = last_frame_time;
     new_bullet_ptr->lifetime = 2000;
     new_bullet_ptr->previous_bullet = NULL;
-    
+    new_bullet_ptr->active = true;
+
     // Додавання нової кулі до списку куль
     new_bullet_ptr->next_bullet = bullets_list;
     if (bullets_list != NULL) {
@@ -78,7 +81,7 @@ if (state[SDL_SCANCODE_SPACE]){
   {
     if(last_frame_time - bullet->create_time > bullet->lifetime)
     {
-      printf("%u - %u", last_frame_time, bullet->create_time);
+     // printf("%u - %u", last_frame_time, bullet->create_time);
       if(bullet->next_bullet != NULL){
         bullet->next_bullet->previous_bullet = bullet->previous_bullet;
       }

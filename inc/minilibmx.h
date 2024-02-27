@@ -11,7 +11,12 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <math.h>
 #include "hero.h"
+#include "enemy.h"
+#include "room_generator.h"
+#include "room_interaction.h"
 
 #define WINDOW_WIDTH 1000
 #define WINDOW_HEIGHT 800

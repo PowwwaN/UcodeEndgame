@@ -18,7 +18,6 @@ SRCS = $(SRC_DIR)draw_hero.c \
        $(SRC_DIR)enemy_position.c \
        $(SRC_DIR)main.c \
        $(SRC_DIR)process_input.c \
-       $(SRC_DIR)render_enemy.c \
        $(SRC_DIR)setup.c \
        $(SRC_DIR)window_stuff.c
 

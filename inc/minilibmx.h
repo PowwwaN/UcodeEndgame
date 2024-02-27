@@ -19,6 +19,8 @@
 #define FPS 120
 #define FRAME_TARGET_TIME (1000 / FPS)
 
+#define MAX_ENEMIES 5
+
 //typedef struct s_hero {
 //    float x;
 //    float y;

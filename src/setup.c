@@ -2,7 +2,10 @@
 #include "../inc/enemy_position.h"
 #define HERO_SPEED 150
 
+Enemy enemies[MAX_ENEMIES];
 Enemy enemy;
+
+int num_enemies = 0;
 
 void setup() {
     hero.x = 500;      // positition of rectangle by x axis
@@ -12,12 +15,20 @@ void setup() {
     hero.xspeed = 0;
     hero.yspeed = 0;
 
-    enemy.x = 10;
-    enemy.y = 10;
-    enemy.width = 30;
-    enemy.height = 30;
-    enemy.xspeed = 5;
-    enemy.yspeed = 5;
+//    randomize enemies
+    srand(time(NULL));
+
+// initialize enemies
+    for (int i = 0; i < MAX_ENEMIES; i++) {
+        enemies[i].width = 30;
+        enemies[i].height = 30;
+        enemies[i].xspeed = 5;
+        enemies[i].yspeed = 5;
+
+        set_enemy_random_position(WINDOW_WIDTH, WINDOW_HEIGHT, &enemies[i]);
+        num_enemies++;
+    }
+
 }
 
 void render() {
@@ -32,9 +43,12 @@ void render() {
             renderer,
             &hero_rect); // fills rectangle with predefined size and position
 
-    SDL_Rect enemy_rect = {enemy.x, enemy.y, enemy.width, enemy.height}; // Assuming enemy size is 30x30
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Red color
-    SDL_RenderFillRect(renderer, &enemy_rect);
+// draw enemies
+    for (int i = 0; i < num_enemies; i++) {
+        SDL_Rect enemy_rect = {enemies[i].x, enemies[i].y, enemies[i].width, enemies[i].height};
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        SDL_RenderFillRect(renderer, &enemy_rect);
+    }
 
     SDL_RenderPresent(renderer); // shows renderer
 
@@ -76,5 +90,7 @@ void update() {
     hero.y -= hero.yspeed * delta_time;
 
     // Update the enemy position
-    update_enemy_position(&enemy, &hero);
+    for (int i = 0; i < num_enemies; i++) {
+        update_enemy_position(&enemies[i], &hero);
+    }
 }

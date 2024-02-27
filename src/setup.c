@@ -62,6 +62,47 @@ void update() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
     switch (event.type) {
+    case SDL_MOUSEBUTTONDOWN:
+      if(event.button.button != SDL_BUTTON_LEFT){
+        break;
+      }
+      //!!! i printf here, because othervise compiler complains about initializing structure !!!
+        if(hero.last_shoot_time - last_frame_time < hero.reload_time){
+          break;
+        }
+        printf("");
+        struct s_bullet* new_bullet_ptr = malloc(sizeof(struct s_bullet));
+        new_bullet_ptr->x = hero.x;
+        new_bullet_ptr->y = hero.y;
+        new_bullet_ptr->width = 20;
+        new_bullet_ptr->height = 20;
+
+
+        new_bullet_ptr->speed = 1000;
+        new_bullet_ptr->create_time = last_frame_time;
+        new_bullet_ptr->lifetime = 2000;
+        new_bullet_ptr->previous_bullet = NULL;
+        
+
+        SDL_Point mouse_position;
+        SDL_GetMouseState(&mouse_position.x, &mouse_position.y);
+
+        double angle = atan2f(mouse_position.y - hero.y, mouse_position.x - hero.x);
+
+        double x_direction = cosf(angle);
+        double y_direction = sinf(angle);
+
+        new_bullet_ptr->direction.x = x_direction;
+        new_bullet_ptr->direction.y = y_direction;
+
+
+
+        new_bullet_ptr->next_bullet = bullets_list;
+        if(bullets_list!= NULL){
+          bullets_list->previous_bullet = new_bullet_ptr;
+        }
+        bullets_list = new_bullet_ptr;
+        break;
     case SDL_KEYDOWN:
       switch (event.key.keysym.sym) {
       case SDLK_w:
@@ -80,29 +121,7 @@ void update() {
         hero.xspeed = -300;
         hero.lastDirection.x = 1;
         break;
-      case SDLK_e:
-        //!!! i printf here, because othervise compiler complains about initializing structure !!!
-        if(hero.last_shoot_time - last_frame_time < hero.reload_time){
-          break;
-        }
-        printf("");
-        struct s_bullet* new_bullet_ptr = malloc(sizeof(struct s_bullet));
-        new_bullet_ptr->x = hero.x;
-        new_bullet_ptr->y = hero.y;
-        new_bullet_ptr->width = 20;
-        new_bullet_ptr->height = 20;
-        new_bullet_ptr->direction = hero.lastDirection;
-        new_bullet_ptr->speed = 5;
-        new_bullet_ptr->create_time = last_frame_time;
-        new_bullet_ptr->lifetime = 2000;
-        new_bullet_ptr->previous_bullet = NULL;
         
-        new_bullet_ptr->next_bullet = bullets_list;
-        if(bullets_list!= NULL){
-          bullets_list->previous_bullet = new_bullet_ptr;
-        }
-        bullets_list = new_bullet_ptr;
-        break;
       }
       break;
     case SDL_KEYUP:
@@ -128,7 +147,6 @@ void update() {
   {
     if(last_frame_time - bullet->create_time > bullet->lifetime)
     {
-      printf("%u - %u", last_frame_time, bullet->create_time);
       if(bullet->next_bullet != NULL){
         bullet->next_bullet->previous_bullet = bullet->previous_bullet;
       }
@@ -148,8 +166,8 @@ void update() {
       bullet = next_bullet;
       continue;
     }
-    bullet->x += bullet->direction.x * bullet->speed;
-    bullet->y += bullet->direction.y * bullet->speed;
+    bullet->x += bullet->direction.x * bullet->speed * delta_time;
+    bullet->y += bullet->direction.y * bullet->speed * delta_time;
     bullet = bullet->next_bullet;
   }
 }

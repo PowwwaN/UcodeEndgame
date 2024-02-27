@@ -11,7 +11,11 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <stdlib.h>
 #include "hero.h"
+#include "enemy.h"
+
 
 #define WINDOW_WIDTH 1000
 #define WINDOW_HEIGHT 800
@@ -25,6 +29,9 @@ void process_input(void);
 void update(void);
 void render(void);
 void destroy_window(void);
+void bullets(void);
+void hero_movement(void);
+
 
 SDL_Texture *loadTexture(char *filename);
 

@@ -1,6 +1,8 @@
 #include "../inc/minilibmx.h"
 
 struct s_hero hero;
+int bullets_count;
+struct s_bullet* bullets_list;
 
 int game_is_running = 0;
 SDL_Window *window = NULL;
@@ -17,7 +19,6 @@ int main(int argc, char *argv[]) {
         update();
         render();
     }
-
     destroy_window();
 
     return 0;

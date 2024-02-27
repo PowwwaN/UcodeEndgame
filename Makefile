@@ -13,15 +13,8 @@ INCS = -I$(INC_DIR) -I$(IMG_INC_DIR)
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-# List of source files
-SRCS = $(SRC_DIR)draw_hero.c \
-       $(SRC_DIR)enemy_position.c \
-       $(SRC_DIR)main.c \
-       $(SRC_DIR)process_input.c \
-       $(SRC_DIR)setup.c \
-       $(SRC_DIR)window_stuff.c
-
-# List of object files
+# Use wildcard to gather the list of source files
+SRCS = $(wildcard $(SRC_DIR)*.c)
 OBJS = $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 
 all: $(NAME)
@@ -44,7 +37,7 @@ run: $(NAME)
 # Clean rule
 clean:
 	rm -rf $(OBJ_DIR)
-	rm -f $(NAME)
+	rm -f $(OBJS) $(NAME)
 
 # PHONY rule to avoid conflicts with filenames
 .PHONY: all clean run

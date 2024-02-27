@@ -11,6 +11,8 @@
 #include <time.h>
 #include <stdio.h>
 #include "hero.h"
+#include "room_generator.h"
+#include "room_interaction.h"
 
 #define WINDOW_WIDTH 1000
 #define WINDOW_HEIGHT 800
@@ -39,6 +41,8 @@ struct s_hero {
   float xspeed;
   float yspeed;
 };
+
+
 extern struct s_hero hero;
 
 #endif

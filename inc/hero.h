@@ -14,6 +14,7 @@ typedef struct s_hero {
   float y;
   float width;
   float height;
+  SDL_Texture *texture;
   float xspeed;
   float yspeed;
   unsigned int last_shoot_time;
@@ -37,6 +38,8 @@ struct s_bullet {
 };
 extern struct s_bullet* bullets_list;
 
+SDL_Texture *loadTexture(char *filename);
+void blit(SDL_Texture *texture, int x, int y);
 
 #define HERO_SPEED 450
 #define HERO_WIDTH 30

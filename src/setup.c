@@ -41,12 +41,15 @@ void render() {
   SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Background
   SDL_RenderClear(renderer);
 
-  SDL_Rect hero_rect = {hero.x, hero.y, hero.width, hero.height};
+/*   SDL_Rect hero_rect = {hero.x, hero.y, hero.width, hero.height};
 
   SDL_SetRenderDrawColor(renderer, 0, 0, 255, 200); // color of a rectangle
   SDL_RenderFillRect(
       renderer,
-      &hero_rect); // fills rectangle with predefined size and position
+      &hero_rect); // fills rectangle with predefined size and position */
+
+  hero.texture = loadTexture("./resource/sprites/idle_player.png");
+  blit(hero.texture, hero.x, hero.y);
 
     // draw enemies
     for (int i = 0; i < num_enemies; i++) {

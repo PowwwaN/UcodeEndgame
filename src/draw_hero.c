@@ -21,3 +21,14 @@ void blit(SDL_Texture *texture, int x, int y)
 
 	SDL_RenderCopy(renderer, texture, NULL, &dest);
 }
+
+void blit2(SDL_Texture *texture, int x, int y)
+{
+	SDL_Rect dest2;
+
+	dest2.x = x;
+	dest2.y = y;
+	SDL_QueryTexture(texture, NULL, NULL, &dest2.w, &dest2.h);
+
+	SDL_RenderCopy(renderer, texture, NULL, &dest2);
+}

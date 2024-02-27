@@ -34,6 +34,6 @@ run: $(NAME)
 # Clean rule
 rm:
 	rm -f $(NAME) $(OBJS)
-
+	rm -rf obj/
 # PHONY rule to avoid conflicts with filenames
 .PHONY: all clean run test

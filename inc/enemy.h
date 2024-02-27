@@ -1,21 +1,24 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
+#include <SDL2/SDL.h>
 #include "minilibmx.h"
 
-ENEMY_HEIGHT = 5;
-ENEMY_WIDTH = 5;
-ENEMY_SPEED = 1;
-
-typedef struct {
-    SDL_Rect position;
-    int type; // Використовуйте це, щоб визначити тип ворога (1, 2 або 3)
-    // Додайте інші характеристики ворогів тут
+typedef struct s_enemy {
+    float x;
+    float y;
+    float width;
+    float height;
+    float xspeed;
+    float yspeed;
 } Enemy;
+extern  Enemy enemy;
 
-void initEnemy(Enemy *enemy, int type);
-void moveEnemy(Enemy *enemy, Player *player);
-void renderEnemy(SDL_Renderer *renderer, Enemy *enemy);
-// Додайте додаткові функції, якщо необхідно
+void set_enemy_random_position(float screen_width, float screen_height,Enemy *enemy);
+float distance_between_points(int x1, int y1, int x2, int y2);
+void update_enemy_position(Enemy *enemy, Hero *hero);
+void render_enemy(SDL_Renderer *renderer, Enemy *enemy);
 
-#endif /* ENEMY_H */
+#define MAX_ENEMIES 5
+
+#endif

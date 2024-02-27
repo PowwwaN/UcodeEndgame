@@ -1,6 +1,9 @@
 #include "../inc/minilibmx.h"
 
-#define HERO_SPEED 150
+Enemy enemies[MAX_ENEMIES];
+Enemy enemy;
+
+int num_enemies = 0;
 
 void setup() {
   hero.x = 500;      // positition of rectangle by x axis
@@ -13,8 +16,23 @@ void setup() {
   hero.reload_time = 500;
 
   bullets_list = NULL;
-  
+
+  //    randomize enemies
+    srand(time(NULL));
+
+// initialize enemies
+    for (int i = 0; i < MAX_ENEMIES; i++) {
+        enemies[i].width = 30;
+        enemies[i].height = 30;
+        enemies[i].xspeed = 5;
+        enemies[i].yspeed = 5;
+
+        set_enemy_random_position(WINDOW_WIDTH, WINDOW_HEIGHT, &enemies[i]);
+        num_enemies++;
+    }
+
 }
+
 
 void render() {
   // RGB and opacity
@@ -28,6 +46,12 @@ void render() {
       renderer,
       &hero_rect); // fills rectangle with predefined size and position
 
+    // draw enemies
+    for (int i = 0; i < num_enemies; i++) {
+        SDL_Rect enemy_rect = {enemies[i].x, enemies[i].y, enemies[i].width, enemies[i].height};
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        SDL_RenderFillRect(renderer, &enemy_rect);
+    }
   // rendering bullets
 
   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 200); // color of a rectangle
@@ -58,110 +82,18 @@ void update() {
   // logic to keep a fixed timestep
   last_frame_time = SDL_GetTicks();
 
-  SDL_Event event;
-  while (SDL_PollEvent(&event)) {
-    switch (event.type) {
-    case SDL_KEYDOWN:
-      switch (event.key.keysym.sym) {
-      case SDLK_w:
-        hero.yspeed = 300;
-        hero.lastDirection.y = -1;
-        break;
-      case SDLK_s:
-        hero.yspeed = -300;
-        hero.lastDirection.y = 1;
-        break;
-      case SDLK_a:
-        hero.xspeed = 300;
-        hero.lastDirection.x = -1;
-        break;
-      case SDLK_d:
-        hero.xspeed = -300;
-        hero.lastDirection.x = 1;
-        break;
-      case SDLK_e:
-        //!!! i printf here, because othervise compiler complains about initializing structure !!!
-        if(hero.last_shoot_time - last_frame_time < hero.reload_time){
-          break;
-        }
-        printf("");
-        struct s_bullet* new_bullet_ptr = malloc(sizeof(struct s_bullet));
-        new_bullet_ptr->x = hero.x;
-        new_bullet_ptr->y = hero.y;
-        new_bullet_ptr->width = 20;
-        new_bullet_ptr->height = 20;
-        new_bullet_ptr->direction = hero.lastDirection;
-        new_bullet_ptr->speed = 5;
-        new_bullet_ptr->create_time = last_frame_time;
-        new_bullet_ptr->lifetime = 2000;
-        new_bullet_ptr->previous_bullet = NULL;
-        
-        new_bullet_ptr->next_bullet = bullets_list;
-        if(bullets_list!= NULL){
-          bullets_list->previous_bullet = new_bullet_ptr;
-        }
-        bullets_list = new_bullet_ptr;
-        break;
-      }
-      break;
-    case SDL_KEYUP:
-      switch (event.key.keysym.sym) {
-      case SDLK_w:
-      case SDLK_s:
-        hero.yspeed = 0;
-        break;
-      case SDLK_a:
-      case SDLK_d:
-        hero.xspeed = 0;
-        break;
-      }
-      break;
-    }
-  }
+  
   // hero movement
-  const Uint8 *state = SDL_GetKeyboardState(NULL);
-    if (state[SDL_SCANCODE_W])
-        hero.yspeed = HERO_SPEED;
-    else if (state[SDL_SCANCODE_S])
-        hero.yspeed = -HERO_SPEED;
-        else hero.yspeed = 0;
-
-    if (state[SDL_SCANCODE_A])
-        hero.xspeed = HERO_SPEED;
-    else if (state[SDL_SCANCODE_D])
-        hero.xspeed = -HERO_SPEED;
-    else hero.xspeed = 0;
-
+  hero_movement();
+  
   hero.x -= hero.xspeed * delta_time;
   hero.y -= hero.yspeed * delta_time;
+   
+  bullets();
 
-  struct s_bullet* bullet = bullets_list;
-  for(;bullet!=NULL;)
-  {
-    if(last_frame_time - bullet->create_time > bullet->lifetime)
-    {
-      printf("%u - %u", last_frame_time, bullet->create_time);
-      if(bullet->next_bullet != NULL){
-        bullet->next_bullet->previous_bullet = bullet->previous_bullet;
-      }
-      if(bullet->previous_bullet != NULL){
-        bullet->previous_bullet->next_bullet = bullet->next_bullet;
-      }
-      struct s_bullet* next_bullet = bullet->next_bullet;
-      if(bullet == bullets_list){
-        if(bullet->next_bullet != NULL){
-          bullets_list = bullet->next_bullet;
-        } 
-        else{
-          bullets_list = NULL;
-        }
-      }
-      free(bullet);
-      bullet = next_bullet;
-      continue;
+
+  // Update the enemy position
+    for (int i = 0; i < num_enemies; i++) {
+        update_enemy_position(&enemies[i], &hero);
     }
-    bullet->x += bullet->direction.x * bullet->speed;
-    bullet->y += bullet->direction.y * bullet->speed;
-    bullet = bullet->next_bullet;
-  }
 }

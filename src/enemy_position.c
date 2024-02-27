@@ -31,15 +31,21 @@ void set_enemy_random_position(float screen_width, float screen_height, Enemy *e
     }
 }
 
-float distance_between_points(int x1, int y1, int x2, int y2) {  // distance between enemy and hero
-    return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+void normalize(float *dx, float *dy) {
+    float length = sqrt((*dx) * (*dx) + (*dy) * (*dy));
+    if (length != 0) {
+        *dx /= length;
+        *dy /= length;
+    }
 }
 
-float calculate_dx(Enemy *enemy, Hero *hero) {
-    return (hero->x + 60) - enemy->x;
-}
+// update enemy position
+void update_enemy_position(Enemy *enemy, Hero *hero, float speed, float delta_time) {
+    float dx = hero->x - enemy->x;
+    float dy = hero->y - enemy->y;
 
-float calculate_dy(Enemy *enemy, Hero *hero) {
-    return (hero->y + 60) - enemy->y;
-}
+    normalize(&dx, &dy);
 
+    enemy->x += dx * speed * delta_time;
+    enemy->y += dy * speed * delta_time;
+}

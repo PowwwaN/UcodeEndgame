@@ -78,6 +78,7 @@ void render() {
         &bullet_rect);
     bullet = bullet->next_bullet;
   }
+
   // Перевірка колізії куль із ворогами
 bullet = bullets_list;
 while (bullet != NULL) {
@@ -118,7 +119,7 @@ void update() {
   last_frame_time = SDL_GetTicks();
 
   
-  // hero movementa
+  // hero movement
   hero_movement();
   
   int is_object = is_next_position_object(hero.width, hero.height, hero.x - hero.xspeed * delta_time, hero.y - hero.yspeed * delta_time, current_room_array);
@@ -131,7 +132,7 @@ void update() {
   hero.y -= hero.yspeed * delta_time;
   }
 
-  bullets();
+process_bullets(delta_time);
 
  
 

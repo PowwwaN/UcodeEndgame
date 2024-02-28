@@ -17,6 +17,7 @@
 #include "enemy.h"
 #include "room_generator.h"
 #include "room_interaction.h"
+#include "bullet.h"
 
 #define WINDOW_WIDTH 1000
 #define WINDOW_HEIGHT 800
@@ -30,7 +31,6 @@ void process_input(void);
 void update(void);
 void render(void);
 void destroy_window(void);
-void bullets(void);
 void hero_movement(void);
 
 SDL_Texture *loadTexture(char *filename);

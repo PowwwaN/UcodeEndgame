@@ -31,31 +31,21 @@ void set_enemy_random_position(float screen_width, float screen_height, Enemy *e
     }
 }
 
-float distance_between_points(int x1, int y1, int x2, int y2) {  // distance between enemy and hero
-    return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+void normalize(float *dx, float *dy) {
+    float length = sqrt((*dx) * (*dx) + (*dy) * (*dy));
+    if (length != 0) {
+        *dx /= length;
+        *dy /= length;
+    }
 }
 
-void update_enemy_position(Enemy *enemy, Hero *hero) {  // func to enemy follow hero
-
+// update enemy position
+void update_enemy_position(Enemy *enemy, Hero *hero, float speed, float delta_time) {
     float dx = hero->x - enemy->x;
     float dy = hero->y - enemy->y;
 
-    // Calculate the distance between enemy and hero
-    float distance = sqrt(dx * dx + dy * dy);
+    normalize(&dx, &dy);
 
-    // Normalize the direction vector
-    if (distance != 0) {
-        dx /= distance;
-        dy /= distance;
-    }
-
-    // Set the speed
-    float speed = 5;
-
-
-    // Move the enemy towards the hero
-    enemy->x += dx * speed;
-    enemy->y += dy * speed;
-
+    enemy->x += dx * speed * delta_time;
+    enemy->y += dy * speed * delta_time;
 }
-

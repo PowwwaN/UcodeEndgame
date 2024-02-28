@@ -3,10 +3,14 @@
 
 void process_bullets(float delta_time){
 
-    const Uint8 *state = SDL_GetKeyboardState(NULL);
-    if (state[SDL_SCANCODE_SPACE]){
+
+    int x, y;
+    Uint32 mouse_state = SDL_GetMouseState(&x, &y);
+    if (mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) {
         create_bullet();
     }
+
+
     struct s_bullet* bullet = bullets_list;
     struct s_bullet* prev_bullet = NULL;
     while (bullet != NULL) {

@@ -32,7 +32,7 @@ void draw_room(t_array_represantation_of_the_room room_representation) {
         for (int x = 0; x < width; x++) {
             switch (room_representation.array[y][x]) {
                 case 0: // Floor
-                    drawFloor(x, y);
+//                    drawFloor(x, y);
                     break;
                 case 9: // Wall
                     drawWall(x, y);

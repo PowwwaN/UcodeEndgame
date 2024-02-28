@@ -2,6 +2,8 @@
 #define HERO_H
 
 #include <SDL2/SDL.h>
+#include "enemy.h"
+#include "minilibmx.h"
 
 typedef struct {
 	int x;
@@ -20,15 +22,19 @@ typedef struct s_hero {
   unsigned int last_shoot_time;
   unsigned int reload_time;
   SDL_Point shoot_direction;
+  int hp;
+  bool active;
 } Hero;
 extern Hero hero;
 
 
 SDL_Texture *loadTexture(char *filename);
 void blit(SDL_Texture *texture, int x, int y);
+void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy);
 
 #define HERO_SPEED 450
 #define HERO_WIDTH 47
 #define HERO_HEIGHT 78
+#define REPULSION_DISTANCE 30
 
 #endif

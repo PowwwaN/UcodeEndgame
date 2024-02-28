@@ -14,10 +14,12 @@ int main(int argc, char *argv[]) {
   game_is_running = initialize_window();
 
   setup();
+    SDL_Delay(500);
   while (game_is_running) {
     process_input();
     update();
     render();
+
   }
   destroy_window();
 

@@ -15,7 +15,7 @@ void setup() {
   hero.yspeed = 0;
   hero.last_shoot_time = 0;
   hero.reload_time = 500;
-
+  room_generator(&current_room_array, 0, 1); // generating the starting room array with no entry and exit up
   bullets_list = NULL;
 
   //    randomize enemies
@@ -37,17 +37,14 @@ void setup() {
 
 
 void render() {
-  // RGB and opacity
-  SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Background
-  SDL_RenderClear(renderer);
-
-/*   SDL_Rect hero_rect = {hero.x, hero.y, hero.width, hero.height};
-
+  draw_room(current_room_array);
+/*
+  SDL_Rect hero_rect = {hero.x, hero.y, hero.width, hero.height};
   SDL_SetRenderDrawColor(renderer, 0, 0, 255, 200); // color of a rectangle
   SDL_RenderFillRect(
       renderer,
-      &hero_rect); // fills rectangle with predefined size and position */
-
+      &hero_rect); // fills rectangle with predefined size and position 
+*/
   hero.texture = loadTexture("./resource/sprites/idle_player.png");
   blit(hero.texture, hero.x, hero.y);
 
@@ -81,7 +78,9 @@ void render() {
         &bullet_rect);
     bullet = bullet->next_bullet;
   }
+
   // Перевірка колізії куль із ворогами
+bullet = bullets_list;
 while (bullet != NULL) {
     if (bullet->active) {
         SDL_Rect bullet_rect = {bullet->x, bullet->y, bullet->width, bullet->height};
@@ -113,7 +112,7 @@ void update() {
   if (time_to_wait > 0 && time_to_wait <= FRAME_TARGET_TIME) {
     SDL_Delay(time_to_wait);
   }
-
+  
   // Get a delta time time factor converted to seconds to be used to update my
   // objects later.
   float delta_time = (SDL_GetTicks() - last_frame_time) / 1000.0f;
@@ -121,50 +120,24 @@ void update() {
 
   
   // hero movement
+  hero_movement();
   
+  int is_object = is_next_position_object(hero.width, hero.height, hero.x - hero.xspeed * delta_time, hero.y - hero.yspeed * delta_time, current_room_array);
+  if (is_object == 9) {
+    hero.xspeed = 0;
+    hero.yspeed = 0;
+  }
+  else {
   hero.x -= hero.xspeed * delta_time;
   hero.y -= hero.yspeed * delta_time;
-   
-  process_bullets();
+  }
+
+process_bullets(delta_time);
 
  
 
   // Update the enemy position
-    for (int i = 0; i < num_enemies; i++) {
-        update_enemy_position(&enemies[i], &hero);
-          
+   for (int i = 0; i < num_enemies; i++) {
+        update_enemy_position(&enemies[i], &hero, ENEMY_SPEED, delta_time);
     }
 }
-void process_bullets(void){
- struct s_bullet* bullet = bullets_list;
-  for(;bullet!=NULL;)
-  {
-    if(last_frame_time - bullet->create_time > bullet->lifetime)
-    {
-      if(bullet->next_bullet != NULL){
-        bullet->next_bullet->previous_bullet = bullet->previous_bullet;
-      }
-      if(bullet->previous_bullet != NULL){
-        bullet->previous_bullet->next_bullet = bullet->next_bullet;
-      }
-      struct s_bullet* next_bullet = bullet->next_bullet;
-      if(bullet == bullets_list){
-        if(bullet->next_bullet != NULL){
-          bullets_list = bullet->next_bullet;
-        } 
-        else{
-          bullets_list = NULL;
-        }
-      }
-      free(bullet);
-      bullet = next_bullet;
-      continue;
-    }
-    bullet->x += bullet->direction.x * bullet->speed;
-    bullet->y += bullet->direction.y * bullet->speed;
-    bullet = bullet->next_bullet;
-
-
-  }
-}
-

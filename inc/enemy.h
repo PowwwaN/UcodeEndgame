@@ -12,6 +12,8 @@ typedef struct s_enemy {
     float xspeed;
     float yspeed;
     bool active;
+    int type;
+    int hp;
 } Enemy;
 extern  Enemy enemy;
 

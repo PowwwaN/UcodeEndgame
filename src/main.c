@@ -18,6 +18,7 @@ int main(int argc, char *argv[]) {
     process_input();
     update();
     render();
+
   }
   destroy_window();
 

@@ -37,6 +37,7 @@ void setup() {
 
 
 void render() {
+    SDL_RenderClear(renderer);
   draw_room(current_room_array);
 /*
   SDL_Rect hero_rect = {hero.x, hero.y, hero.width, hero.height};
@@ -122,9 +123,12 @@ void update() {
   hero_movement();
   
   int is_object = is_next_position_object(hero.width, hero.height, hero.x - hero.xspeed * delta_time, hero.y - hero.yspeed * delta_time, current_room_array);
-  if (is_object == 9) {
+  if (is_object == 9 || is_object == 1) {
     hero.xspeed = 0;
     hero.yspeed = 0;
+  }
+  else if (is_object == 2) {
+    room_exit_transition(&hero, &current_room_array);
   }
   else {
   hero.x -= hero.xspeed * delta_time;

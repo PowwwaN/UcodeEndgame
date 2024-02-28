@@ -35,10 +35,13 @@ void setup() {
 
         if (enemies[i].type == 0) {
             enemies[i].hp = 1;
+            enemies[i].damage = 1;
         } else if (enemies[i].type == 1) {
             enemies[i].hp = 2;
+            enemies[i].damage = 2;
         } else if (enemies[i].type == 2) {
             enemies[i].hp = 3;
+            enemies[i].damage = 3;
         }
 
         set_enemy_random_position(WINDOW_WIDTH, WINDOW_HEIGHT, &enemies[i]);
@@ -91,8 +94,8 @@ void render() {
                     // pushing hero
                     check_enemy_collision_and_repel(&hero, &enemies[i]);
                     // reducing hero hp
-                    hero.hp--;
-                } else {
+                    hero.hp -= enemies[i].damage;
+                } else if (hero.hp <= 0) {
                     // if hero is dead
                     hero.active = false;
                 }

@@ -14,12 +14,13 @@ typedef struct s_enemy {
     bool active;
     int type;
     int hp;
+    bool avoid;
 } Enemy;
 extern  Enemy enemy;
 
 void set_enemy_random_position(float screen_width, float screen_height,Enemy *enemy);
 float distance_between_points(int x1, int y1, int x2, int y2);
-void update_enemy_position(Enemy *enemy, Hero *hero, float speed, float delta_time);
+void update_enemy_position(Enemy *enemy, Hero *hero, float speed, float delta_time, Enemy *other_enemies, int num_other_enemies);
 void render_enemy(SDL_Renderer *renderer, Enemy *enemy);
 float calculate_dx(Enemy *enemy, Hero *hero);
 float calculate_dy(Enemy *enemy, Hero *hero);

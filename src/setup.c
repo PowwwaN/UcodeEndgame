@@ -157,7 +157,7 @@ process_bullets(delta_time);
  
 
   // Update the enemy position
-   for (int i = 0; i < num_enemies; i++) {
-        update_enemy_position(&enemies[i], &hero, ENEMY_SPEED, delta_time);
+    for (int i = 0; i < num_enemies; i++) {
+        update_enemy_position(&enemies[i], &hero, ENEMY_SPEED, delta_time, enemies, num_enemies);
     }
 }

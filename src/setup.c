@@ -51,13 +51,12 @@ void render() {
         // Update animation frame
         currentFrame = (currentFrame + 1) % NUM_FRAMES;
 
-        // Clear screen
-        SDL_RenderClear(renderer);
 
         // Draw character
         SDL_Rect hero_rect = { currentFrame * hero.width, hero.direction * hero.height, hero.width, hero.height};
         SDL_Rect destRect = { hero.x, hero.y, hero.width, hero.height};
         SDL_RenderCopy(renderer, hero.texture, &hero_rect, &destRect);
+        SDL_Delay(100);
 //////////////////////////////////////////////////////////////////////////////
     ///deaw hero
 //////////////////////////////////////////////////////////////////////////////
@@ -87,7 +86,7 @@ void render() {
       if (!hero_invincible) {
         // Проверяем, не находится ли герой в состоянии невосприимчивости
         check_enemy_collision_and_repel(&hero, &enemies[i], &hero_invincible,
-                                        &last_attack_time, &timer_active);
+                                        &last_attack_time);
       }
     } else if (hero.hp <= 0) {
       hero.active = false;
@@ -142,7 +141,7 @@ void render() {
   SDL_RenderPresent(renderer);
   // shows renderer
   SDL_RenderClear(renderer);
-  SDL_DestroyTexture(hero.texture);
+  
 }
 
 void update() {

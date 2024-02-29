@@ -42,5 +42,6 @@ int main(int argc, char *argv[]) {
   destroy_window();
   SDL_DestroyTexture(bg_texture);
   SDL_DestroyTexture(cursor.texture);
+  SDL_DestroyTexture(hero.texture);
   return 0;
 }

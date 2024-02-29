@@ -25,6 +25,8 @@ extern int currentFrame;
 
 SDL_Texture *loadTexture(char *filename);
 void blit(SDL_Texture *texture, int x, int y);
+SDL_Texture* loadImage(const char* filename, SDL_Renderer* renderer);
+
 #define HERO_SPEED 450
 #define HERO_WIDTH 85
 #define HERO_HEIGHT 87

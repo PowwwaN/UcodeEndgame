@@ -31,7 +31,7 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR)
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
-	rm $(OBJ_DIR)
+	rm -rf $(OBJ_DIR)
 
 run: $(NAME)
 	./$(NAME)

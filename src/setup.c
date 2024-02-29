@@ -4,6 +4,8 @@ Enemy enemies[MAX_ENEMIES];
 Enemy enemy;
 
 int num_enemies = 0;
+time_t last_attack_time = 0;
+
 
 void setup() {
 
@@ -92,9 +94,12 @@ void render() {
             if (SDL_HasIntersection(&hero_rect, &enemy_rect)) {
                 if (hero.active && hero.hp > 0) {
                     // pushing hero
-                    check_enemy_collision_and_repel(&hero, &enemies[i]);
+                    check_enemy_collision_and_repel(&hero, &enemies[i], hero.texture);
                     // reducing hero hp
                     hero.hp -= enemies[i].damage;
+
+                    // Record the time of the attack
+                    last_attack_time = time(NULL);
                 } else if (hero.hp <= 0) {
                     // if hero is dead
                     hero.active = false;
@@ -102,18 +107,21 @@ void render() {
             }
         }
     }
+    if (difftime(time(NULL), last_attack_time) < 0.5) {
+        SDL_SetTextureColorMod(hero.texture, 255, 0, 0);
+    } else {
+        SDL_SetTextureColorMod(hero.texture, 255, 255, 255); // Reset to default color
+    }
+    blit(hero.texture, hero.x, hero.y);
+
 // rendering bullets
 
     SDL_SetRenderDrawColor(renderer,
                            255, 0, 0, 200); // color of a rectangle
     struct s_bullet *bullet = bullets_list;
-    for (; bullet !=
-           NULL;
-            ) {
+    for (; bullet != NULL;) {
         SDL_Rect bullet_rect = {bullet->x, bullet->y, bullet->width, bullet->height};
-        SDL_RenderFillRect(
-                renderer,
-                &bullet_rect);
+        SDL_RenderFillRect(renderer,&bullet_rect);
         bullet = bullet->next_bullet;
     }
 
@@ -122,21 +130,16 @@ void render() {
     while (bullet != NULL) {
         if (bullet->active) {
             SDL_Rect bullet_rect = {bullet->x, bullet->y, bullet->width, bullet->height};
-            for (
-                    int i = 0;
-                    i < num_enemies;
-                    ++i) {
+            for (int i = 0; i < num_enemies; ++i) {
                 if (enemies[i].active) {
                     SDL_Rect enemy_rect = {enemies[i].x, enemies[i].y, ENEMY_WIDTH, ENEMY_HEIGHT};
                     if (SDL_HasIntersection(&bullet_rect, &enemy_rect)) {
-// Обробка колізії кулі та ворога тут
+                            // Обробка колізії кулі та ворога тут
                         if (enemies[i].hp == 1) {
-                            enemies[i].
-                                    active = false; // Ворог знищений
+                            enemies[i].active = false; // Ворог знищений
                         }
                         enemies[i].hp--; // зменшення здоров'я ворога
-                        bullet->
-                                active = false; // Куля видалена
+                        bullet->active = false; // Куля видалена
                         break; // Виходимо з циклу, якщо колізія вже виявлена
                     }
                 }

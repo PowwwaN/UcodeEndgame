@@ -24,14 +24,14 @@ typedef struct s_hero {
   SDL_Point shoot_direction;
   int hp;
   bool active;
+  bool attacked;
 } Hero;
 extern Hero hero;
 
 
 SDL_Texture *loadTexture(char *filename);
 void blit(SDL_Texture *texture, int x, int y);
-void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy);
-
+void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy, SDL_Texture *texture);
 #define HERO_SPEED 450
 #define HERO_WIDTH 47
 #define HERO_HEIGHT 78

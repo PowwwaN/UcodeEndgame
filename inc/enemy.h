@@ -7,7 +7,6 @@
 
 typedef struct s_hero Hero;
 
-
 typedef struct s_enemy {
     float x;
     float y;

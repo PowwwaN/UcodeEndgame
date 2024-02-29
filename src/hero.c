@@ -3,7 +3,7 @@
 #include "../inc/enemy.h"
 
 // function for pushing the hero
-void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy) {
+void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy, SDL_Texture *texture) {
     // check if hero and enemy collide
     if (hero->x < enemy->x + ENEMY_WIDTH && hero->x + HERO_WIDTH > enemy->x &&
         hero->y < enemy->y + ENEMY_HEIGHT && hero->y + HERO_HEIGHT > enemy->y) {
@@ -22,5 +22,6 @@ void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy) {
         } else {
             hero->x -= 30;
         }
+
     }
 }

@@ -3,6 +3,7 @@
 Enemy enemies[MAX_ENEMIES];
 Enemy enemy;
 SDL_Texture *texture;
+int max_enemies = MAX_ENEMIES;
 int num_enemies = 0;
 time_t last_attack_time = 0;
 
@@ -24,30 +25,8 @@ void setup() {
   //    randomize enemies
     srand(time(NULL));
 
-// initialize enemies
     // initialize enemies
-    for (int i = 0; i < MAX_ENEMIES; i++) {
-        enemies[i].width = ENEMY_WIDTH;
-        enemies[i].height = ENEMY_HEIGHT;
-        enemies[i].xspeed = ENEMY_SPEED;
-        enemies[i].yspeed = ENEMY_SPEED;
-        enemies[i].active = true;
-        enemies[i].type = rand() % 3;
-
-        if (enemies[i].type == 0) {
-            enemies[i].hp = 1;
-            enemies[i].damage = 1;
-        } else if (enemies[i].type == 1) {
-            enemies[i].hp = 2;
-            enemies[i].damage = 2;
-        } else if (enemies[i].type == 2) {
-            enemies[i].hp = 3;
-            enemies[i].damage = 3;
-        }
-
-        set_enemy_random_position(WINDOW_WIDTH, WINDOW_HEIGHT, &enemies[i]);
-        num_enemies++;
-    }
+    num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
 
  
 }
@@ -175,6 +154,8 @@ void update() {
   }
   else if (is_object == 3 || is_object == 2) {
     room_exit_transition(&hero, &current_room_array);
+    max_enemies++;
+    num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
   }
   else {
   hero.x -= hero.xspeed * delta_time;

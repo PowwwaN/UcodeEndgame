@@ -30,8 +30,7 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR)
 # Rule to link object files into the executable
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
-	rm -rf $(OBJ_DIR)
-	
+
 run: $(NAME)
 	./$(NAME)
 

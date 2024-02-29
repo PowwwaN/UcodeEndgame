@@ -97,3 +97,30 @@ void update_enemy_position(Enemy *enemy, Hero *hero, float speed, float delta_ti
         enemy->y += dy * speed * delta_time;
     }
 }
+
+int draw_enemy(Enemy *enemies, int num_enemies, int max_enemies) {
+    num_enemies = 0;
+    for (int i = num_enemies; i < max_enemies; i++) {
+        enemies[i].width = ENEMY_WIDTH;
+        enemies[i].height = ENEMY_HEIGHT;
+        enemies[i].xspeed = ENEMY_SPEED;
+        enemies[i].yspeed = ENEMY_SPEED;
+        enemies[i].active = true;
+        enemies[i].type = rand() % 3;
+
+        if (enemies[i].type == 0) {
+            enemies[i].hp = 1;
+            enemies[i].damage = 1;
+        } else if (enemies[i].type == 1) {
+            enemies[i].hp = 2;
+            enemies[i].damage = 2;
+        } else if (enemies[i].type == 2) {
+            enemies[i].hp = 3;
+            enemies[i].damage = 3;
+        }
+
+        set_enemy_random_position(WINDOW_WIDTH, WINDOW_HEIGHT, &enemies[i]);
+        num_enemies++;
+    }
+    return num_enemies;
+}

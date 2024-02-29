@@ -41,4 +41,5 @@ extern SDL_Window *window; //NULL
 extern SDL_Renderer *renderer; //NULL
 extern int last_frame_time;
 
+
 #endif

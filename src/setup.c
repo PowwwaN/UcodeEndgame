@@ -6,6 +6,10 @@ SDL_Texture *texture;
 int max_enemies = MAX_ENEMIES;
 int num_enemies = 0;
 time_t last_attack_time = 0;
+bool hero_invincible = false;
+
+bool timer_active = false;
+bool was_attacked = false;
 
 void setup() {
 
@@ -33,14 +37,14 @@ void setup() {
 
 
 void render() {
-  
+
   draw_room(current_room_array);
 
   SDL_Rect hero_rect = {hero.x, hero.y, hero.width, hero.height};
   SDL_SetRenderDrawColor(renderer, 0, 0, 255, 200); // color of a rectangle
   SDL_RenderFillRect(
       renderer,
-      &hero_rect); // fills rectangle with predefined size and position 
+      &hero_rect); // fills rectangle with predefined size and position
 
 
   ///////
@@ -65,29 +69,22 @@ void render() {
     }
 
     for (int i = 0; i < num_enemies; ++i) {
-        if (enemies[i].active) {
-            SDL_Rect hero_rect = {hero.x, hero.y, HERO_WIDTH, HERO_HEIGHT};
-            SDL_Rect enemy_rect = {enemies[i].x, enemies[i].y, ENEMY_WIDTH, ENEMY_HEIGHT};
-            if (SDL_HasIntersection(&hero_rect, &enemy_rect)) {
-                if (hero.active && hero.hp > 0) {
-                    // pushing hero
-                    check_enemy_collision_and_repel(&hero, &enemies[i], hero.texture);
-                    // reducing hero hp
-                    hero.hp -= enemies[i].damage;
-
-                    // Record the time of the attack
-                    last_attack_time = time(NULL);
-                } else if (hero.hp <= 0) {
-                    // if hero is dead
-                    hero.active = false;
-                }
+        if (enemies[i].active && hero.active && hero.hp > 0) {
+            if (!hero_invincible) {
+                // Проверяем, не находится ли герой в состоянии невосприимчивости
+                check_enemy_collision_and_repel(&hero, &enemies[i], &hero_invincible, &last_attack_time, &timer_active);
             }
+        } else if (hero.hp <= 0) {
+            hero.active = false;
         }
     }
-    if (difftime(time(NULL), last_attack_time) < 0.5) {
-        SDL_SetTextureColorMod(hero.texture, 255, 0, 0);
+
+    if (difftime(time(NULL), last_attack_time) < 1.0) {
+        // Если прошло менее одной секунды с последней атаки, герой красный
+        SDL_SetTextureColorMod(hero.texture, 255, 0, 0); // Устанавливаем красный цвет
     } else {
-        SDL_SetTextureColorMod(hero.texture, 255, 255, 255); // Reset to default color
+        // Возвращаем обычный цвет
+        SDL_SetTextureColorMod(hero.texture, 255, 255, 255);
     }
     blit(hero.texture, hero.x, hero.y);
 
@@ -122,7 +119,7 @@ void render() {
         }
       }
         bullet = bullet->next_bullet;
-  
+
   }
   SDL_RenderPresent(renderer);
   // shows renderer

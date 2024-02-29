@@ -127,7 +127,7 @@ void update() {
     hero.xspeed = 0;
     hero.yspeed = 0;
   }
-  else if (is_object == 2) {
+  else if (is_object == 3 || is_object == 2) {
     room_exit_transition(&hero, &current_room_array);
   }
   else {

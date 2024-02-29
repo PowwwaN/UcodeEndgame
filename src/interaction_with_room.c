@@ -28,6 +28,9 @@ int what_object_is_next(int x, int y, int hero_width, int hero_height, t_array_r
         t_position_in_room position_in_the_array = get_the_position_in_array(array_of_positions[iterator_through_positions]);
         array_x = position_in_the_array.x;
         array_y = position_in_the_array.y;
+        if (current_room_array.array[array_y][array_x] == 3) {
+            return 3;
+        }
         if (current_room_array.array[array_y][array_x] == 9) {
             return 9;
         }
@@ -65,9 +68,8 @@ void hero_room_transition(struct s_hero *hero, int exit_direction) {
 
 short sync_room_exit_and_entry(int exit_direction) {
     switch(exit_direction) {
-        case 1: {
+        case 1:
             return 3;
-        }
         case 2:
             return 4;
         case 3:

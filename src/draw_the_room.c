@@ -42,6 +42,9 @@ void draw_room(t_array_represantation_of_the_room room_representation) {
                 case 0: // Floor
                     drawFloor(x, y);
                     break;
+                case 3: // Floor
+                    drawFloor(x, y);
+                    break;
                 case 9: // Wall
                     drawWall(x, y);
                     break;

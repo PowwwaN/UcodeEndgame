@@ -30,7 +30,6 @@ void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy, SDL_Texture
 
             // Update last attack time
             *last_attack_time = time(NULL);
-            printf("last attack time: %ld\n", *last_attack_time);
         }
     } else {
         // Если таймер уже активен и время не прошло, сбрасываем таймер

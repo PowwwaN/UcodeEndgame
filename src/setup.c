@@ -72,7 +72,7 @@ void render() {
         if (enemies[i].active && hero.active && hero.hp > 0) {
             if (!hero_invincible) {
                 // Проверяем, не находится ли герой в состоянии невосприимчивости
-                check_enemy_collision_and_repel(&hero, &enemies[i], &hero_invincible, &last_attack_time, &timer_active);
+                check_enemy_collision_and_repel(&hero, &enemies[i], hero.texture, &last_attack_time, &timer_active);
             }
         } else if (hero.hp <= 0) {
             hero.active = false;

@@ -88,6 +88,45 @@ bool is_exit(int x, int y, short exit_direction, int width, int height) {
     return false;
 }
 
+bool is_ghost_exit(int x, int y, short exit_direction, int width, int height) {
+    int exit_size = min(width, height) / 4;
+    x++;
+    y++;
+    int distance_between_edge_and_entry;
+    if (exit_direction == 0) {
+        return false;
+    }
+    if (exit_direction == 1) { // up direction
+        distance_between_edge_and_entry = (width - exit_size) / 2;
+        if (y == 2 && (x >= distance_between_edge_and_entry && x < distance_between_edge_and_entry + exit_size)) {
+            return true;
+        }
+        return false;
+    }
+    if (exit_direction == 2) { // right direction
+        distance_between_edge_and_entry = (height - exit_size) / 2;
+        if (x == width - 1 && (y >= distance_between_edge_and_entry && y < distance_between_edge_and_entry + exit_size)) {
+            return true;
+        }
+        return false;
+    }
+    if (exit_direction == 3) { // down direction
+        distance_between_edge_and_entry = (width - exit_size) / 2;
+        if (y == height - 1 && (x >= distance_between_edge_and_entry && x < distance_between_edge_and_entry + exit_size)) {
+            return true;
+        }
+        return false;
+    }
+    if (exit_direction == 4) { // left direction
+        distance_between_edge_and_entry = (height - exit_size) / 2;
+        if (x == 2 && (y >= distance_between_edge_and_entry && y < distance_between_edge_and_entry + exit_size)) {
+            return true;
+        }
+        return false;
+    }
+    return false;
+}
+
 void filling_the_room_array(t_array_represantation_of_the_room *room_representation) {
     room_representation->width = WINDOW_WIDTH / 20;
     room_representation->height = WINDOW_HEIGHT / 20;
@@ -98,7 +137,10 @@ void filling_the_room_array(t_array_represantation_of_the_room *room_representat
 
     for (int y = 0; y < room_representation->height; y++) {
         for (int x = 0; x < room_representation->width; x++) {
-            if (is_floor(x, y, room_representation->width, room_representation->height)) {
+            if (is_ghost_exit(x, y, room_representation->exit_direction, room_representation->width, room_representation->height)) {
+                room_representation->array[y][x] = 3;
+            }
+            else if (is_floor(x, y, room_representation->width, room_representation->height)) {
                 room_representation->array[y][x] = 0; // int representation of the floor/empty space
             }
             else if (is_entry(x, y, room_representation->entry_direction, room_representation->width, room_representation->height)) {

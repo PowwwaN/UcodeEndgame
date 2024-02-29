@@ -18,9 +18,10 @@
 #include "room_generator.h"
 #include "room_interaction.h"
 #include "bullet.h"
+#include "cursor.h"
 
-#define WINDOW_WIDTH 1000
-#define WINDOW_HEIGHT 800
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
 
 #define FPS 120
 #define FRAME_TARGET_TIME (1000 / FPS)
@@ -39,5 +40,6 @@ extern int game_is_running; // = 0
 extern SDL_Window *window; //NULL
 extern SDL_Renderer *renderer; //NULL
 extern int last_frame_time;
+
 
 #endif

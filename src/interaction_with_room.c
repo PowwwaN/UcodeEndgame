@@ -9,7 +9,7 @@ t_position_in_room get_the_position_in_array(t_position_in_room position_of_dot)
     return result;
 }
 
-int is_player_in_the_obstacle(int x, int y, int hero_width, int hero_height, t_array_represantation_of_the_room current_room_array) {
+int what_object_is_next(int x, int y, int hero_width, int hero_height, t_array_represantation_of_the_room current_room_array) {
     t_position_in_room array_of_positions[AMOUNT_OF_PLAYERS_EDGES];
     t_position_in_room player_left_upper_dot;
     t_position_in_room player_right_upper_dot;
@@ -28,15 +28,80 @@ int is_player_in_the_obstacle(int x, int y, int hero_width, int hero_height, t_a
         t_position_in_room position_in_the_array = get_the_position_in_array(array_of_positions[iterator_through_positions]);
         array_x = position_in_the_array.x;
         array_y = position_in_the_array.y;
+        if (current_room_array.array[array_y][array_x] == 3) {
+            return 3;
+        }
         if (current_room_array.array[array_y][array_x] == 9) {
             return 9;
+        }
+        if (current_room_array.array[array_y][array_x] == 2) {
+            return 2;
+        }
+        if (current_room_array.array[array_y][array_x] == 1) {
+            return 1;
         }
     }
     return 0;
 }
+
 int is_next_position_object(int hero_width, int hero_height, int x, int y, t_array_represantation_of_the_room current_room_array) {
-    if (is_player_in_the_obstacle(x, y, hero_width, hero_height, current_room_array)){
-        return 9;
+    return (what_object_is_next(x, y, hero_width, hero_height, current_room_array));
+}
+
+void hero_room_transition(struct s_hero *hero, int exit_direction) {
+    switch(exit_direction) {
+        case 1: {
+            hero->y = WINDOW_HEIGHT - 150;
+            break;
+        }
+        case 2:
+            hero->x = 80;
+            break;
+        case 3:
+            hero->y = 80;
+            break;
+        case 4:
+            hero->x = WINDOW_WIDTH - 80;
+            break;
+    }
+}
+
+short sync_room_exit_and_entry(int exit_direction) {
+    switch(exit_direction) {
+        case 1:
+            return 3;
+        case 2:
+            return 4;
+        case 3:
+            return 1;
+        case 4:
+            return 2;
     }
     return 0;
+}
+
+short generate_exit_direction(int entry_direction) {
+    short new_exit_direction = entry_direction;
+    while (new_exit_direction == entry_direction) {
+        srand(time(NULL));
+        new_exit_direction = (rand() % 4) + 1;
+    }
+    return new_exit_direction;
+}
+
+void next_room_transition(t_array_represantation_of_the_room **current_room) {
+    t_array_represantation_of_the_room *new_room = malloc(sizeof(t_array_represantation_of_the_room));
+    short new_room_entry_direction = sync_room_exit_and_entry((*current_room)->exit_direction);
+    short new_room_exit_direction = generate_exit_direction(new_room_entry_direction);
+    room_generator(new_room, new_room_entry_direction, new_room_exit_direction);
+    **current_room = *new_room;
+    free(new_room);
+}
+
+void room_exit_transition(struct s_hero *hero, t_array_represantation_of_the_room *current_room) {
+    hero_room_transition(hero, current_room->exit_direction);
+    next_room_transition(&current_room);
+    //wave of enemies
+
+
 }

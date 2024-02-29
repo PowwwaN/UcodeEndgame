@@ -65,7 +65,7 @@ void create_bullet(void){
 
     new_bullet_ptr->direction.x = cosf(angle);
     new_bullet_ptr->direction.y = sinf(angle);
-    new_bullet_ptr->speed = 500;
+    new_bullet_ptr->speed = BULLET_SPEED;
     new_bullet_ptr->create_time = last_frame_time;
     new_bullet_ptr->lifetime = 2000;
     new_bullet_ptr->previous_bullet = NULL;

@@ -18,6 +18,8 @@ void setup() {
   hero.reload_time = 500;
   room_generator(&current_room_array, 0, 1); // generating the starting room array with no entry and exit up
   bullets_list = NULL;
+  hero.hp = 5;
+  hero.active = true;
 
   //    randomize enemies
     srand(time(NULL));
@@ -54,13 +56,13 @@ void setup() {
 void render() {
   
   draw_room(current_room_array);
-/*
+
   SDL_Rect hero_rect = {hero.x, hero.y, hero.width, hero.height};
   SDL_SetRenderDrawColor(renderer, 0, 0, 255, 200); // color of a rectangle
   SDL_RenderFillRect(
       renderer,
       &hero_rect); // fills rectangle with predefined size and position 
-*/
+
 
   ///////
    hero.texture = loadTexture("./resource/sprites/idle_player.png");

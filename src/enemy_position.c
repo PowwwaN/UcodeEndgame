@@ -41,8 +41,8 @@ void normalize(float *dx, float *dy) {
 
 // update enemy position
 void update_enemy_position(Enemy *enemy, Hero *hero, float speed, float delta_time, Enemy *other_enemies, int num_other_enemies) {
-    float dx = hero->x - enemy->x;
-    float dy = hero->y - enemy->y;
+    float dx = (hero->x + (HERO_WIDTH / 2)) - (enemy->x + (ENEMY_WIDTH / 2));
+    float dy = (hero->y + (HERO_HEIGHT / 2)) - (enemy->y + (ENEMY_HEIGHT / 2));
     normalize(&dx, &dy);
 
     bool collision_detected = false;

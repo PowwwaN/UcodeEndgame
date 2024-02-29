@@ -17,6 +17,14 @@ void drawFloor(int x, int y) {
 }
 void drawEntry(int x, int y) {
     SDL_Rect entry_rect = {x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
+    SDL_SetRenderDrawColor(renderer, 0, 0, 30, 200);
+    SDL_RenderFillRect(
+            renderer,
+            &entry_rect);
+}
+
+void drawExit(int x, int y) {
+    SDL_Rect entry_rect = {x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
     SDL_SetRenderDrawColor(renderer, 50, 0, 100, 200);
     SDL_RenderFillRect(
             renderer,
@@ -32,7 +40,10 @@ void draw_room(t_array_represantation_of_the_room room_representation) {
         for (int x = 0; x < width; x++) {
             switch (room_representation.array[y][x]) {
                 case 0: // Floor
-//                    drawFloor(x, y);
+ //                   drawFloor(x, y);
+                    break;
+                case 3: // Floor
+ //                   drawFloor(x, y);
                     break;
                 case 9: // Wall
                     drawWall(x, y);
@@ -41,7 +52,7 @@ void draw_room(t_array_represantation_of_the_room room_representation) {
                     drawEntry(x, y);
                     break;
                 case 2: // Exit
-                    drawEntry(x, y);
+                    drawExit(x, y);
                     break;
             }
         }

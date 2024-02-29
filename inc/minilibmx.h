@@ -18,9 +18,10 @@
 #include "room_generator.h"
 #include "room_interaction.h"
 #include "bullet.h"
+#include "cursor.h"
 
-#define WINDOW_WIDTH 1000
-#define WINDOW_HEIGHT 800
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
 
 #define FPS 120
 #define FRAME_TARGET_TIME (1000 / FPS)

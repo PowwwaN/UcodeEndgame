@@ -3,7 +3,7 @@
 #include "../inc/enemy.h"
 
 // function for pushing the hero
-void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy, SDL_Texture *texture, time_t *last_attack_time, bool *timer_active) {
+void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy, time_t *last_attack_time, bool *timer_active) {
     // Проверяем, прошло ли достаточно времени с момента последнего удара и таймер не активен
     if (difftime(time(NULL), *last_attack_time) >= 1.0 && !(*timer_active)) {
         // Активируем таймер

@@ -151,6 +151,14 @@ void update() {
         room_exit_transition(&hero, &current_room_array);
         max_enemies++;
         num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
+        // deleting all bullets after transition
+        struct s_bullet* bullet = bullets_list;
+        while (bullet!= NULL) {
+            if (bullet->active) {
+                bullet->active = false;
+            }
+            bullet = bullet->next_bullet;
+        }
     }
   else {
     if (hero.xspeed == 0 && hero.yspeed != 0) {

@@ -46,7 +46,7 @@ void make_button_active(t_menu_button *button) {
 }
 
 void make_button_inactive(t_menu_button *button) {
-    button->button_opacity = 150;
+    button->button_opacity = 240;
 }
 
 void action_if_mouse_inside_button(t_menu_data *menu_data) {
@@ -75,6 +75,17 @@ void action_if_mouse_inside_button(t_menu_data *menu_data) {
     }
 }
 
+SDL_Texture *load_texture_for_button(char *path_to_texture) {
+    SDL_Surface* tempSurface = IMG_Load(path_to_texture);
+    if (!tempSurface) {
+        printf("Unable to load image: %s\n", SDL_GetError());
+    }
+
+    SDL_Texture* buttonTexture = SDL_CreateTextureFromSurface(renderer, tempSurface);
+    SDL_FreeSurface(tempSurface);
+    return buttonTexture;
+}
+
 t_menu_data menu_setup() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -95,10 +106,21 @@ t_menu_data menu_setup() {
     int button_width = 400;
     int button_height = 100;
     int menu_buttonx_start = (WINDOW_WIDTH / 2) - (button_width / 2);
+    menuState.startButton = (t_menu_button){{menu_buttonx_start, 250, button_width, button_height}, 0,
+                                            load_texture_for_button("resource/sprites/start_menu_buttonv1.png"),
+                                            load_texture_for_button("resource/sprites/start_active.png"),
+                                            "Start", &menu_start_game_button_action};
 
-    menuState.startButton = (t_menu_button){{menu_buttonx_start, 250, button_width, button_height}, 0, "Start", &menu_start_game_button_action};
-    menuState.settingsButton = (t_menu_button){{menu_buttonx_start, 400, button_width, button_height}, 0, "Settings", &menu_toggle_sound_button_action};
-    menuState.exitButton = (t_menu_button){{menu_buttonx_start, 550, button_width, button_height}, 0, "Exit", &menu_exit_game_button_action};
+    menuState.settingsButton = (t_menu_button){{menu_buttonx_start, 350, button_width, button_height}, 0,
+                                               load_texture_for_button("resource/sprites/settings_inactive.png"),
+                                               load_texture_for_button("resource/sprites/setting_active.png"),
+                                               "Settings", &menu_toggle_sound_button_action};
+
+    menuState.exitButton = (t_menu_button){{menu_buttonx_start, 450, button_width, button_height}, 0,
+                                           load_texture_for_button("resource/sprites/exitv1.png"),
+                                           load_texture_for_button("resource/sprites/exit_active.png"),
+                                           "Exit", &menu_exit_game_button_action};
+
     menuState.background_texture_path = "./resource/sprites/menu_backgroundv1.jpg";
     menuState.menu_bg_texture = menu_load_texture(menuState.background_texture_path);
     menuState.blinking_message.font = TTF_OpenFont("./resource/fonts/dogica.ttf", 24);
@@ -117,12 +139,14 @@ void menu_process_input(t_menu_data *menu_data, bool *menu_is_running) {
         switch (event.type) {
             case SDL_QUIT:
                 *menu_is_running = false;
+                game_is_running = false;
                 clean_after_stoppng_menu(menu_data);
                 break;
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_ESCAPE) {
                     clean_after_stoppng_menu(menu_data);
                     *menu_is_running = false;
+                    game_is_running = false;
                     reset_opacity_to_max();
                 }
                 if (event.key.keysym.sym == SDLK_RETURN) {

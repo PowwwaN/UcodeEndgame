@@ -6,6 +6,8 @@
 typedef struct s_menu_button{
     SDL_Rect rect;
     int button_opacity;
+    SDL_Texture* inactive_texture;
+    SDL_Texture* active_texture;
     char* label;
     void (*onClick)(void); // Function for the click event
 } t_menu_button;

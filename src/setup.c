@@ -3,13 +3,18 @@
 Enemy enemies[MAX_ENEMIES];
 Enemy enemy;
 SDL_Texture *texture;
+int max_enemies = MAX_ENEMIES;
 int num_enemies = 0;
 time_t last_attack_time = 0;
+bool hero_invincible = false;
+
+bool timer_active = false;
+bool was_attacked = false;
 
 void setup() {
 
-  hero.x = 500;      // positition of rectangle by x axis
-  hero.y = 500;      // positition of rectangle by y axis
+  hero.x = WINDOW_WIDTH / 2;      // positition of rectangle by x axis
+  hero.y = WINDOW_HEIGHT / 2;     // positition of rectangle by y axis
   hero.width = HERO_WIDTH;  // width of rectangle
   hero.height = HERO_HEIGHT; // height of rectangle
   hero.xspeed = 0;
@@ -18,37 +23,14 @@ void setup() {
   hero.reload_time = 500;
   room_generator(&current_room_array, 0, 1); // generating the starting room array with no entry and exit up
   bullets_list = NULL;
-  hero.hp = 5;
+  hero.hp = 50000;
   hero.active = true;
 
-  //    randomize enemies
+   //    randomize enemies
     srand(time(NULL));
 
-// initialize enemies
     // initialize enemies
-    for (int i = 0; i < MAX_ENEMIES; i++) {
-        enemies[i].width = ENEMY_WIDTH;
-        enemies[i].height = ENEMY_HEIGHT;
-        enemies[i].xspeed = ENEMY_SPEED;
-        enemies[i].yspeed = ENEMY_SPEED;
-        enemies[i].active = true;
-        enemies[i].type = rand() % 3;
-
-        if (enemies[i].type == 0) {
-            enemies[i].hp = 1;
-            enemies[i].damage = 1;
-        } else if (enemies[i].type == 1) {
-            enemies[i].hp = 2;
-            enemies[i].damage = 2;
-        } else if (enemies[i].type == 2) {
-            enemies[i].hp = 3;
-            enemies[i].damage = 3;
-        }
-
-        set_enemy_random_position(WINDOW_WIDTH, WINDOW_HEIGHT, &enemies[i]);
-        num_enemies++;
-    }
-
+    num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
  
 }
 
@@ -57,16 +39,6 @@ void render() {
   
   draw_room(current_room_array);
 
-  SDL_Rect hero_rect = {hero.x, hero.y, hero.width, hero.height};
-  SDL_SetRenderDrawColor(renderer, 0, 0, 255, 200); // color of a rectangle
-  SDL_RenderFillRect(
-      renderer,
-      &hero_rect); // fills rectangle with predefined size and position 
-
-
-  ///////
-   hero.texture = loadTexture("./resource/sprites/idle_player.png");
-   blit(hero.texture, hero.x, hero.y);
 
     // draw enemies
     for (int i = 0; i < num_enemies; i++) {
@@ -85,30 +57,22 @@ void render() {
         }
     }
 
-    for (int i = 0; i < num_enemies; ++i) {
-        if (enemies[i].active) {
-            SDL_Rect hero_rect = {hero.x, hero.y, HERO_WIDTH, HERO_HEIGHT};
-            SDL_Rect enemy_rect = {enemies[i].x, enemies[i].y, ENEMY_WIDTH, ENEMY_HEIGHT};
-            if (SDL_HasIntersection(&hero_rect, &enemy_rect)) {
-                if (hero.active && hero.hp > 0) {
-                    // pushing hero
-                    check_enemy_collision_and_repel(&hero, &enemies[i], hero.texture);
-                    // reducing hero hp
-                    hero.hp -= enemies[i].damage;
-
-                    // Record the time of the attack
-                    last_attack_time = time(NULL);
-                } else if (hero.hp <= 0) {
-                    // if hero is dead
-                    hero.active = false;
-                }
+   for (int i = 0; i < num_enemies; ++i) {
+        if (enemies[i].active && hero.active && hero.hp > 0) {
+            if (!hero_invincible) {
+                check_enemy_collision_and_repel(&hero, &enemies[i], &last_attack_time, &timer_active);
             }
+        } else if (hero.hp <= 0) {
+            hero.active = false;
         }
     }
-    if (difftime(time(NULL), last_attack_time) < 0.5) {
-        SDL_SetTextureColorMod(hero.texture, 255, 0, 0);
+
+    if (difftime(time(NULL), last_attack_time) < 1.0) {
+        SDL_SetTextureColorMod(idle_sheet, 255, 0, 0);
+        SDL_SetTextureColorMod(hero_sheet, 255, 0, 0);
     } else {
-        SDL_SetTextureColorMod(hero.texture, 255, 255, 255); // Reset to default color
+        SDL_SetTextureColorMod(idle_sheet, 255, 255, 255);
+        SDL_SetTextureColorMod(hero_sheet, 255, 255, 255);
     }
     blit(hero.texture, hero.x, hero.y);
 
@@ -145,10 +109,10 @@ void render() {
         bullet = bullet->next_bullet;
   
   }
-  SDL_RenderPresent(renderer);
+  
   // shows renderer
+  SDL_RenderPresent(renderer);
   SDL_RenderClear(renderer);
-  SDL_DestroyTexture(hero.texture);
 }
 
 void update() {
@@ -170,17 +134,65 @@ void update() {
 
   int is_object = is_next_position_object(hero.width, hero.height, hero.x - hero.xspeed * delta_time, hero.y - hero.yspeed * delta_time, current_room_array);
   if (is_object == 9 || is_object == 1) {
-    hero.xspeed = 0;
-    hero.yspeed = 0;
+      if (is_horizontal_wall(hero.x - hero.xspeed * delta_time, hero.y - hero.yspeed * delta_time)) {
+          hero.yspeed = 0;
+          hero.x -= hero.xspeed * delta_time;
+      }
+      else if (is_horizontal_wall(hero.x - hero.xspeed * delta_time, hero.y - hero.yspeed * delta_time)) {
+          hero.xspeed = 0;
+          hero.y -= hero.yspeed * delta_time;
+      }
+      else {
+          hero.xspeed = 0;
+          hero.yspeed = 0;
+      }
   }
   else if (is_object == 3 || is_object == 2) {
-    room_exit_transition(&hero, &current_room_array);
-  }
+        room_exit_transition(&hero, &current_room_array);
+        max_enemies++;
+        num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
+    }
   else {
-  hero.x -= hero.xspeed * delta_time;
-  hero.y -= hero.yspeed * delta_time;
+    if (hero.xspeed == 0 && hero.yspeed != 0) {
+      hero.y -= hero.yspeed * delta_time * sqrt(2);
+    } else if (hero.yspeed == 0 && hero.xspeed != 0) {
+      hero.x -= hero.xspeed * delta_time * sqrt(2);
+    } else {
+      hero.x -= hero.xspeed * delta_time;
+      hero.y -= hero.yspeed * delta_time;
+    }
   }
-
+    if (hero.xspeed == 0 && hero.yspeed > 0) {
+    hero.direction = 4; // up
+    load_hero(1, 6);
+  } else if (hero.yspeed < 0 && hero.xspeed == 0) {
+    hero.direction = 0; // down
+    load_hero(1, 6);
+  }
+  if (hero.yspeed == 0 && hero.xspeed > 0) {
+    hero.direction = 6; // right
+    load_hero(1, 6);
+  } else if (hero.yspeed == 0 && hero.xspeed < 0) {
+    hero.direction = 2; // left
+    load_hero(1, 6);
+  }
+  if (hero.yspeed > 0 && hero.xspeed > 0) {
+    hero.direction = 5; // up-left
+    load_hero(1, 6);
+  } else if (hero.yspeed < 0 && hero.xspeed > 0) {
+    hero.direction = 7; // down-left
+    load_hero(1, 6);
+  }
+  if (hero.yspeed < 0 && hero.xspeed < 0) {
+    hero.direction = 1; // down-right
+    load_hero(1, 6);
+  } else if (hero.yspeed > 0 && hero.xspeed < 0) {
+    hero.direction = 3; // up-right
+    load_hero(1, 6);
+  }
+  if (hero.yspeed == 0 && hero.xspeed == 0) {
+    load_hero(0, 4);
+  }
 process_bullets(delta_time);
 
  

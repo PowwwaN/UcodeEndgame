@@ -1,7 +1,7 @@
 NAME = game
 CC = clang
 CFLAGS = -Wall -std=c99
-LIBS = -L/opt/homebrew/Cellar/sdl2/2.30.0/lib -lSDL2 -L/opt/homebrew/Cellar/sdl2_image/2.8.2/lib -lSDL2_image -lm
+LIBS = -L/opt/homebrew/Cellar/sdl2/2.30.0/lib -lSDL2 -lSDL2_ttf -lSDL2_mixer -L/opt/homebrew/Cellar/sdl2_image/2.8.2/lib -lSDL2_image -lm
 
 # Specify include directories for SDL2 and SDL2_image headers
 INC_DIR = /opt/homebrew/Cellar/sdl2/2.30.0/include

@@ -9,6 +9,13 @@ t_position_in_room get_the_position_in_array(t_position_in_room position_of_dot)
     return result;
 }
 
+bool is_horizontal_wall(int x, int y) {
+    if (y < 20 || y > WINDOW_HEIGHT - 20) {
+        return true;
+    }
+    return false;
+}
+
 int what_object_is_next(int x, int y, int hero_width, int hero_height, t_array_represantation_of_the_room current_room_array) {
     t_position_in_room array_of_positions[AMOUNT_OF_PLAYERS_EDGES];
     t_position_in_room player_left_upper_dot;

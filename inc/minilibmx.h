@@ -19,6 +19,7 @@
 #include "room_interaction.h"
 #include "bullet.h"
 #include "cursor.h"
+#include "menu.h"
 
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720

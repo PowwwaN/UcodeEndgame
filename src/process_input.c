@@ -21,24 +21,18 @@ const Uint8 *state = SDL_GetKeyboardState(NULL);
 
 if (state[SDL_SCANCODE_W]){
     hero.yspeed = HERO_SPEED; 
-    hero.shoot_direction.y = -1;
 }
 else if (state[SDL_SCANCODE_S]){
     hero.yspeed = -HERO_SPEED; 
-    hero.shoot_direction.y = 1;
 } else {
   hero.yspeed = 0;
-  hero.shoot_direction.y = 0;
 }
 if (state[SDL_SCANCODE_A]){
     hero.xspeed = HERO_SPEED; 
-    hero.shoot_direction.x = -1;
 }
 else if (state[SDL_SCANCODE_D]){
     hero.xspeed = -HERO_SPEED; 
-    hero.shoot_direction.x = 1;
 } else {
 hero.xspeed = 0;
-hero.shoot_direction.x = 0;
 }
 }

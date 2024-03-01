@@ -1,14 +1,20 @@
 #include "../inc/minilibmx.h"
+#include "../inc/bullet.h"
 
 Enemy enemies[MAX_ENEMIES];
 Enemy enemy;
-
+SDL_Texture *texture;
+int max_enemies = MAX_ENEMIES;
 int num_enemies = 0;
+time_t last_attack_time = 0;
+bool hero_invincible = false;
+bool timer_active = false;
+bool was_attacked = false;
 
 void setup() {
 
-  hero.x = 500;      // positition of rectangle by x axis
-  hero.y = 500;      // positition of rectangle by y axis
+  hero.x = WINDOW_WIDTH / 2;      // positition of rectangle by x axis
+  hero.y = WINDOW_HEIGHT / 2;     // positition of rectangle by y axis
   hero.width = HERO_WIDTH;  // width of rectangle
   hero.height = HERO_HEIGHT; // height of rectangle
   hero.xspeed = 0;
@@ -17,127 +23,193 @@ void setup() {
   hero.reload_time = 500;
   room_generator(&current_room_array, 0, 1); // generating the starting room array with no entry and exit up
   bullets_list = NULL;
+  hero.hp = 50000;
+  hero.active = true;
 
-  //    randomize enemies
+   //    randomize enemies
     srand(time(NULL));
 
-// initialize enemies
-    for (int i = 0; i < MAX_ENEMIES; i++) {
-        enemies[i].width = ENEMY_WIDTH;
-        enemies[i].height = ENEMY_HEIGHT;
-        enemies[i].xspeed = ENEMY_SPEED;
-        enemies[i].yspeed = ENEMY_SPEED;
-        enemies[i].active = true;
-
-        set_enemy_random_position(WINDOW_WIDTH, WINDOW_HEIGHT, &enemies[i]);
-        num_enemies++;
-    }
+    // initialize enemies
+    num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
 
 }
 
 
 void render() {
+
   draw_room(current_room_array);
-/*
-  SDL_Rect hero_rect = {hero.x, hero.y, hero.width, hero.height};
-  SDL_SetRenderDrawColor(renderer, 0, 0, 255, 200); // color of a rectangle
-  SDL_RenderFillRect(
-      renderer,
-      &hero_rect); // fills rectangle with predefined size and position 
-*/
-  hero.texture = loadTexture("./resource/sprites/idle_player.png");
-  blit(hero.texture, hero.x, hero.y);
+
 
     // draw enemies
     for (int i = 0; i < num_enemies; i++) {
-      if (enemies[i].active){
-        SDL_Rect enemy_rect = {enemies[i].x, enemies[i].y, enemies[i].width, enemies[i].height};
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        SDL_RenderFillRect(renderer, &enemy_rect);
-      }
+        if (enemies[i].active && enemies[i].type == 0) {
+            load_enemy(2, 8, enemies[i].x, enemies[i].y);
+        } else if (enemies[i].active && enemies[i].type == 1) {
+            load_enemy(3, 8, enemies[i].x, enemies[i].y);
+        } else if (enemies[i].active && enemies[i].type == 2) {
+            load_enemy(4, 8, enemies[i].x, enemies[i].y);
+        }
     }
 
-    for (int i = 0; i < num_enemies; ++i) {
-            if (enemies[i].active) {
-                SDL_Rect hero_rect = {hero.x, hero.y, HERO_WIDTH, HERO_HEIGHT};
-                SDL_Rect enemy_rect = {enemies[i].x, enemies[i].y, ENEMY_WIDTH, ENEMY_HEIGHT};
-                if (SDL_HasIntersection(&hero_rect, &enemy_rect)) {
-                    // Обробка колізії тут
-                    enemies[i].active = false; // Ворог знищений
-                }
+   for (int i = 0; i < num_enemies; ++i) {
+        if (enemies[i].active && hero.active && hero.hp > 0) {
+            if (!hero_invincible) {
+                check_enemy_collision_and_repel(&hero, &enemies[i], &last_attack_time, &timer_active);
             }
+        } else if (hero.hp <= 0) {
+            hero.active = false;
         }
+    }
+
+    if (difftime(time(NULL), last_attack_time) < 1.0) {
+        SDL_SetTextureColorMod(idle_sheet, 255, 0, 0);
+        SDL_SetTextureColorMod(hero_sheet, 255, 0, 0);
+    } else {
+        SDL_SetTextureColorMod(idle_sheet, 255, 255, 255);
+        SDL_SetTextureColorMod(hero_sheet, 255, 255, 255);
+    }
+    blit(hero.texture, hero.x, hero.y);
+
   // rendering bullets
 
-  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 200); // color of a rectangle
-  struct s_bullet* bullet = bullets_list;
-  for(;bullet!=NULL;){
-    SDL_Rect bullet_rect = {bullet->x, bullet->y, bullet->width, bullet->height};
-    SDL_RenderFillRect(
-        renderer,
-        &bullet_rect);
-    bullet = bullet->next_bullet;
-  }
+
+   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 200); // color of a rectangle
+   struct s_bullet* bullet = bullets_list;
+   for(;bullet!=NULL;){
+     SDL_Rect bullet_rect = {bullet->x, bullet->y, bullet->width, bullet->height};
+     SDL_RenderFillRect(renderer, &bullet_rect);
+     bullet = bullet->next_bullet;
+   }
+   
+  
+
 
   // Перевірка колізії куль із ворогами
-bullet = bullets_list;
-while (bullet != NULL) {
-    if (bullet->active) {
-        SDL_Rect bullet_rect = {bullet->x, bullet->y, bullet->width, bullet->height};
-        for (int i = 0; i < num_enemies; ++i) {
-            if (enemies[i].active) {
-                SDL_Rect enemy_rect = {enemies[i].x, enemies[i].y, ENEMY_WIDTH, ENEMY_HEIGHT};
-                if (SDL_HasIntersection(&bullet_rect, &enemy_rect)) {
-                    // Обробка колізії кулі та ворога тут
-                    enemies[i].active = false; // Ворог знищений
-                    bullet->active = false; // Куля видалена
-                    break; // Виходимо з циклу, якщо колізія вже виявлена
-                }
-            }
+
+
+
+
+
+  bullet = bullets_list;
+  while (bullet != NULL) {
+      if (bullet->active) {
+          SDL_Rect bullet_rect = {bullet->x, bullet->y, bullet->width, bullet->height};
+          for (int i = 0; i < num_enemies; ++i) {
+               if (enemies[i].active) {
+                  SDL_Rect enemy_rect = {enemies[i].x, enemies[i].y, ENEMY_WIDTH, ENEMY_HEIGHT};
+                  if (SDL_HasIntersection(&bullet_rect, &enemy_rect)) {
+                      // Обробка колізії кулі та ворога тут
+                      if (enemies[i].hp == 1) {
+                          enemies[i].active = false; // Ворог знищений
+                      }
+                      enemies[i].hp--; // зменшення здоров'я ворога
+                      bullet->active = false; // Куля видалена
+                      break; // Виходимо з циклу, якщо колізія вже виявлена
+                  }
+               }
         }
-    }
-    bullet = bullet->next_bullet;
-}
-
-  SDL_RenderPresent(renderer); // shows renderer
-
+      }
+        bullet = bullet->next_bullet;
   
+  }
+  
+  // shows renderer
+  SDL_RenderPresent(renderer);
+  SDL_RenderClear(renderer);
 }
 
 void update() {
   // sleep until reach the target frametime (required only if fps capping
   // needed)
-  int time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - last_frame_time);
+ // int time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks() - last_frame_time);
 
-  if (time_to_wait > 0 && time_to_wait <= FRAME_TARGET_TIME) {
-    SDL_Delay(time_to_wait);
-  }
+  //if (time_to_wait > 0 && time_to_wait <= FRAME_TARGET_TIME) {
+  // SDL_Delay(time_to_wait);
+  //}
   
   // Get a delta time time factor converted to seconds to be used to update my
   // objects later.
   float delta_time = (SDL_GetTicks() - last_frame_time) / 1000.0f;
   last_frame_time = SDL_GetTicks();
 
-  
   // hero movement
   hero_movement();
-  
-  int is_object = is_next_position_object(hero.width, hero.height, hero.x - hero.xspeed * delta_time, hero.y - hero.yspeed * delta_time, current_room_array);
-  if (is_object == 9) {
-    hero.xspeed = 0;
-    hero.yspeed = 0;
-  }
-  else {
-  hero.x -= hero.xspeed * delta_time;
-  hero.y -= hero.yspeed * delta_time;
-  }
 
+  int is_object = is_next_position_object(hero.width, hero.height, hero.x - hero.xspeed * delta_time, hero.y - hero.yspeed * delta_time, current_room_array);
+  if (is_object == 9 || is_object == 1) {
+      if (is_horizontal_wall(hero.x - hero.xspeed * delta_time, hero.y - hero.yspeed * delta_time)) {
+          hero.yspeed = 0;
+          hero.x -= hero.xspeed * delta_time;
+      }
+      else if (is_horizontal_wall(hero.x - hero.xspeed * delta_time, hero.y - hero.yspeed * delta_time)) {
+          hero.xspeed = 0;
+          hero.y -= hero.yspeed * delta_time;
+      }
+      else {
+          hero.xspeed = 0;
+          hero.yspeed = 0;
+      }
+  }
+  else if (is_object == 3 || is_object == 2) {
+        room_exit_transition(&hero, &current_room_array);
+        max_enemies++;
+        num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
+        // deleting all bullets after transition
+        struct s_bullet* bullet = bullets_list;
+        while (bullet!= NULL) {
+            if (bullet->active) {
+                bullet->active = false;
+            }
+            bullet = bullet->next_bullet;
+        }
+    }
+  else {
+    if (hero.xspeed == 0 && hero.yspeed != 0) {
+      hero.y -= hero.yspeed * delta_time * sqrt(2);
+    } else if (hero.yspeed == 0 && hero.xspeed != 0) {
+      hero.x -= hero.xspeed * delta_time * sqrt(2);
+    } else {
+      hero.x -= hero.xspeed * delta_time;
+      hero.y -= hero.yspeed * delta_time;
+    }
+  }
+    if (hero.xspeed == 0 && hero.yspeed > 0) {
+    hero.direction = 4; // up
+    load_hero(1, 6);
+  } else if (hero.yspeed < 0 && hero.xspeed == 0) {
+    hero.direction = 0; // down
+    load_hero(1, 6);
+  }
+  if (hero.yspeed == 0 && hero.xspeed > 0) {
+    hero.direction = 6; // right
+    load_hero(1, 6);
+  } else if (hero.yspeed == 0 && hero.xspeed < 0) {
+    hero.direction = 2; // left
+    load_hero(1, 6);
+  }
+  if (hero.yspeed > 0 && hero.xspeed > 0) {
+    hero.direction = 5; // up-left
+    load_hero(1, 6);
+  } else if (hero.yspeed < 0 && hero.xspeed > 0) {
+    hero.direction = 7; // down-left
+    load_hero(1, 6);
+  }
+  if (hero.yspeed < 0 && hero.xspeed < 0) {
+    hero.direction = 1; // down-right
+    load_hero(1, 6);
+  } else if (hero.yspeed > 0 && hero.xspeed < 0) {
+    hero.direction = 3; // up-right
+    load_hero(1, 6);
+  }
+  if (hero.yspeed == 0 && hero.xspeed == 0) {
+    load_hero(0, 4);
+  }
 process_bullets(delta_time);
 
  
 
   // Update the enemy position
    for (int i = 0; i < num_enemies; i++) {
-        update_enemy_position(&enemies[i], &hero, ENEMY_SPEED, delta_time);
+        update_enemy_position(&enemies[i], &hero, ENEMY_SPEED, delta_time, enemies, num_enemies);
     }
 }

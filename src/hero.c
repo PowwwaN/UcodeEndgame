@@ -4,9 +4,7 @@
 
 // function for pushing the hero
 void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy, time_t *last_attack_time, bool *timer_active) {
-    // Проверяем, прошло ли достаточно времени с момента последнего удара и таймер не активен
     if (difftime(time(NULL), *last_attack_time) >= 1.0 && !(*timer_active)) {
-        // Активируем таймер
         *timer_active = true;
 
         // Check if hero and enemy collide
@@ -32,7 +30,6 @@ void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy, time_t *las
             *last_attack_time = time(NULL);
         }
     } else {
-        // Если таймер уже активен и время не прошло, сбрасываем таймер
         *timer_active = false;
     }
 }

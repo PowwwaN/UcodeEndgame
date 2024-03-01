@@ -13,20 +13,20 @@ void set_enemy_random_position(float screen_width, float screen_height, Enemy *e
 
     switch (edge) {
         case 0: // top edge
-            enemy->x = (float) (rand() % (int) screen_width);
-            enemy->y = 0;
+            enemy->x = (float) (rand() % ((int) screen_width - (TILE_SIZE * 2)) + TILE_SIZE);
+            enemy->y = 0 + ((ENEMY_HEIGHT / 2) + TILE_SIZE);
             break;
         case 1: // right edge
-            enemy->x = screen_width;
-            enemy->y = (float) (rand() % (int) screen_height);
+            enemy->x = screen_width - (ENEMY_WIDTH + (ENEMY_WIDTH / 2) + TILE_SIZE);
+            enemy->y = (float) (rand() % ((int) screen_height - (TILE_SIZE * 2)) + TILE_SIZE);
             break;
         case 2: // bot edge
-            enemy->x = (float) (rand() % (int) screen_width);
-            enemy->y = screen_height;
+            enemy->x = (float) (rand() % ((int) screen_width - (TILE_SIZE * 2)) + TILE_SIZE);
+            enemy->y = screen_height - (ENEMY_HEIGHT + (ENEMY_HEIGHT / 2) + TILE_SIZE);
             break;
         case 3: // left edge
-            enemy->x = 0;
-            enemy->y = (float) (rand() % (int) screen_height);
+            enemy->x = 0 + ((ENEMY_WIDTH / 2) + TILE_SIZE);
+            enemy->y = (float) (rand() % ((int) screen_height - (TILE_SIZE * 2)) + TILE_SIZE);
             break;
     }
 }

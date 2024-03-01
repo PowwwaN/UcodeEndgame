@@ -66,12 +66,23 @@ void render() {
         }
     }
 
+    time_t current_time = time(NULL);
+
     for (int i = 0; i < num_enemies; ++i) {
         if (enemies[i].active && hero.active && hero.hp > 0) {
-            if (!hero_invincible) {
-                check_enemy_collision_and_repel(&hero, &enemies[i], &last_attack_time, &timer_active);
-                // Damage hero
-                hero.hp -= enemy.damage;
+            // checking collision
+            if (SDL_HasIntersection(&(SDL_Rect){hero.x, hero.y, HERO_WIDTH, HERO_HEIGHT},
+                                    &(SDL_Rect){enemies[i].x, enemies[i].y, ENEMY_WIDTH, ENEMY_HEIGHT})) {
+                // checking attack time
+                if (difftime(current_time, last_attack_time) >= 1.0) {
+                    if (hero.hp > 0) {
+                        // pushing hero
+                        check_enemy_collision_and_repel(&hero, &enemies[i], &last_attack_time, &timer_active);
+
+                        // changing time
+                        last_attack_time = current_time;
+                    }
+                }
             }
         } else if (hero.hp <= 0) {
             hero.active = false;

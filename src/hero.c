@@ -31,6 +31,8 @@ void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy, time_t *las
                 hero->x += repulsion_x;
                 hero->y += repulsion_y;
 
+                hero->hp -= enemy->damage;
+
                 // Update last attack time
                 *last_attack_time = time(NULL);
             }

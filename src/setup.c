@@ -72,6 +72,8 @@ void render() {
         if (enemies[i].active && hero.active && hero.hp > 0) {
             if (!hero_invincible) {
                 check_enemy_collision_and_repel(&hero, &enemies[i], &last_attack_time, &timer_active);
+                // Damage hero
+                hero->hp -= enemy->damage;
             }
         } else if (hero.hp <= 0) {
             hero.active = false;

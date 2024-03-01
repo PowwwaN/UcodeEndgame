@@ -29,8 +29,6 @@ void setup() {
     //    randomize enemies
     srand(time(NULL));
 
-    // initialize enemies
-    num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
 
 
 }
@@ -73,7 +71,7 @@ void render() {
             if (!hero_invincible) {
                 check_enemy_collision_and_repel(&hero, &enemies[i], &last_attack_time, &timer_active);
                 // Damage hero
-                hero->hp -= enemy->damage;
+                hero.hp -= enemy.damage;
             }
         } else if (hero.hp <= 0) {
             hero.active = false;

@@ -134,5 +134,5 @@ int draw_enemy(Enemy *enemies, int num_enemies, int max_enemies) {
         set_enemy_random_position(WINDOW_WIDTH, WINDOW_HEIGHT, &enemies[i]);
         num_enemies++;
     }
-    return num_enemies;
+    return num_enemies -=1;
 }

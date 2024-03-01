@@ -7,6 +7,7 @@ t_array_represantation_of_the_room current_room_array;
 Cursor cursor;
 int currentFrame;
 SDL_Texture *hero_sheet;
+SDL_Texture *idle_sheet;
 
 int game_is_running = 0;
 SDL_Window *window = NULL;
@@ -31,6 +32,15 @@ int main(int argc, char *argv[]) {
   /// loading hero
   ///  ///////  ///////  ///////  ///////  ///////
 
+  ///////  ///////  ///////  /////// ///////
+  /// loading hero
+  ///  ///////  ///////  ///////  ///////  ///////
+    idle_sheet = loadTexture("../resource/sprites/idle.png");
+
+    currentFrame = 0;
+  ///////  ///////  ///////  /////// ///////
+  /// loading hero
+  ///  ///////  ///////  ///////  ///////  ///////
   setup();
   while (game_is_running) {
     process_input();

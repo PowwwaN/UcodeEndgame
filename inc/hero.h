@@ -23,13 +23,15 @@ extern Hero hero;
 
 extern int currentFrame;
 extern SDL_Texture *hero_sheet;
+extern SDL_Texture *idle_sheet;
 
 SDL_Texture *loadTexture(char *filename);
 void blit(SDL_Texture *texture, int x, int y);
 SDL_Texture* loadImage(const char* filename, SDL_Renderer* renderer);
 void load_hero();
+void draw_sprite(SDL_Texture* sprite_sheet, int current_frame, int sprite_direction, int sprite_x, int sprite_y, int sprite_width, int sprite_height, SDL_Renderer* renderer);
 
-#define HERO_SPEED 1
+#define HERO_SPEED 250
 #define HERO_WIDTH 47// 85
 #define HERO_HEIGHT 78//87
 #define NUM_FRAMES 6

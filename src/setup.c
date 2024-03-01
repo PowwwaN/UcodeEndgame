@@ -190,6 +190,8 @@ void update() {
     } else if (hero.yspeed > 0 && hero.xspeed < 0) {
       hero.direction = 3; // up-right
       load_hero();
+    }else if(hero.yspeed == 0 && hero.xspeed == 0){
+        draw_sprite(idle_sheet, currentFrame, 0, hero.x - 12, hero.y - 10, hero.width + 38, hero.height + 9, renderer);
     } 
   process_bullets(delta_time);
 

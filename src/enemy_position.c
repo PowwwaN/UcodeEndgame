@@ -13,20 +13,32 @@ void set_enemy_random_position(float screen_width, float screen_height, Enemy *e
 
     switch (edge) {
         case 0: // top edge
-            enemy->x = (float) (rand() % ((int) screen_width - (TILE_SIZE * 2)) + TILE_SIZE);
-            enemy->y = 0 + ((ENEMY_HEIGHT / 2) + TILE_SIZE);
+            do {
+                enemy->x = (float) (rand() % ((int) screen_width - (TILE_SIZE * 2)) + TILE_SIZE);
+                enemy->y = 0 + ((ENEMY_HEIGHT / 2) + TILE_SIZE);
+            } while (enemy->x > hero.x - ENEMY_WIDTH && enemy->x < hero.x + HERO_WIDTH &&
+                     enemy->y > hero.y - ENEMY_HEIGHT && enemy->y < hero.y + HERO_HEIGHT);
             break;
         case 1: // right edge
-            enemy->x = screen_width - (ENEMY_WIDTH + (ENEMY_WIDTH / 2) + TILE_SIZE);
-            enemy->y = (float) (rand() % ((int) screen_height - (TILE_SIZE * 2)) + TILE_SIZE);
+            do {
+                enemy->x = screen_width - (ENEMY_WIDTH + (ENEMY_WIDTH / 2) + TILE_SIZE);
+                enemy->y = (float) (rand() % ((int) screen_height - (TILE_SIZE * 2)) + TILE_SIZE);
+            } while (enemy->x > hero.x - ENEMY_WIDTH && enemy->x < hero.x + HERO_WIDTH &&
+                     enemy->y > hero.y - ENEMY_HEIGHT && enemy->y < hero.y + HERO_HEIGHT);
             break;
         case 2: // bot edge
-            enemy->x = (float) (rand() % ((int) screen_width - (TILE_SIZE * 2)) + TILE_SIZE);
-            enemy->y = screen_height - (ENEMY_HEIGHT + (ENEMY_HEIGHT / 2) + TILE_SIZE);
+            do {
+                enemy->x = (float) (rand() % ((int) screen_width - (TILE_SIZE * 2)) + TILE_SIZE);
+                enemy->y = screen_height - (ENEMY_HEIGHT + (ENEMY_HEIGHT / 2) + TILE_SIZE);
+            } while (enemy->x > hero.x - ENEMY_WIDTH && enemy->x < hero.x + HERO_WIDTH &&
+                     enemy->y > hero.y - ENEMY_HEIGHT && enemy->y < hero.y + HERO_HEIGHT);
             break;
         case 3: // left edge
-            enemy->x = 0 + ((ENEMY_WIDTH / 2) + TILE_SIZE);
-            enemy->y = (float) (rand() % ((int) screen_height - (TILE_SIZE * 2)) + TILE_SIZE);
+            do {
+                enemy->x = 0 + ((ENEMY_WIDTH / 2) + TILE_SIZE);
+                enemy->y = (float) (rand() % ((int) screen_height - (TILE_SIZE * 2)) + TILE_SIZE);
+            } while (enemy->x > hero.x - ENEMY_WIDTH && enemy->x < hero.x + HERO_WIDTH &&
+                     enemy->y > hero.y - ENEMY_HEIGHT && enemy->y < hero.y + HERO_HEIGHT);
             break;
     }
 }

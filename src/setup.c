@@ -23,7 +23,7 @@ void setup() {
     hero.reload_time = 500;
     room_generator(&current_room_array, 0, 1); // generating the starting room array with no entry and exit up
     bullets_list = NULL;
-    hero.hp = 5;
+    hero.hp = 500;
     hero.active = true;
 
     //    randomize enemies

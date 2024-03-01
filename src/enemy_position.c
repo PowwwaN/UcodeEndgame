@@ -5,6 +5,7 @@
 #include <math.h>
 
 
+
 // function to set random enemy position on map edge
 void set_enemy_random_position(float screen_width, float screen_height, Enemy *enemy) {
 
@@ -134,5 +135,5 @@ int draw_enemy(Enemy *enemies, int num_enemies, int max_enemies) {
         set_enemy_random_position(WINDOW_WIDTH, WINDOW_HEIGHT, &enemies[i]);
         num_enemies++;
     }
-    return num_enemies -=1;
+    return num_enemies;
 }

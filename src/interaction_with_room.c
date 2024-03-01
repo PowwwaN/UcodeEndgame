@@ -101,7 +101,4 @@ void next_room_transition(t_array_represantation_of_the_room **current_room) {
 void room_exit_transition(struct s_hero *hero, t_array_represantation_of_the_room *current_room) {
     hero_room_transition(hero, current_room->exit_direction);
     next_room_transition(&current_room);
-    //wave of enemies
-
-
 }

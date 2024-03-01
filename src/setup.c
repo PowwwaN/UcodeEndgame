@@ -11,6 +11,10 @@ bool hero_invincible = false;
 bool timer_active = false;
 bool was_attacked = false;
 
+bool exit_delay_active = false;
+int exit_delay_duration = 1000;
+int exit_delay_start_time = 0;
+
 void setup() {
 
     hero.x = 500;      // positition of rectangle by x axis
@@ -130,6 +134,17 @@ void render() {
         bullet = bullet->next_bullet;
 
     }
+
+    if (exit_delay_active) {
+        int current_time = SDL_GetTicks();
+        // check if delay is over
+        if (current_time - exit_delay_start_time >= exit_delay_duration) {
+            num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
+            max_enemies++;
+            exit_delay_active = false;
+        }
+    }
+
     SDL_RenderPresent(renderer);
     // shows renderer
     SDL_RenderClear(renderer);
@@ -160,8 +175,12 @@ void update() {
         hero.yspeed = 0;
     } else if (is_object == 3 || is_object == 2) {
         room_exit_transition(&hero, &current_room_array);
-        max_enemies++;
-        num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
+        num_enemies = 0;
+//        max_enemies++;
+//        num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
+
+        exit_delay_active = true;
+        exit_delay_start_time = SDL_GetTicks();
     } else {
         hero.x -= hero.xspeed * delta_time;
         hero.y -= hero.yspeed * delta_time;

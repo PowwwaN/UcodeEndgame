@@ -6,6 +6,7 @@ struct s_bullet *bullets_list;
 t_array_represantation_of_the_room current_room_array;
 Cursor cursor;
 int currentFrame;
+int currentFrame_x;
 SDL_Texture *hero_sheet;
 SDL_Texture *idle_sheet;
 
@@ -35,9 +36,9 @@ int main(int argc, char *argv[]) {
   ///////  ///////  ///////  /////// ///////
   /// loading hero
   ///  ///////  ///////  ///////  ///////  ///////
-    idle_sheet = loadTexture("../resource/sprites/idle.png");
+  idle_sheet = loadTexture("./resource/sprites/idle.png");
 
-    currentFrame = 0;
+  currentFrame_x = 0;
   ///////  ///////  ///////  /////// ///////
   /// loading hero
   ///  ///////  ///////  ///////  ///////  ///////

@@ -22,10 +22,12 @@ typedef struct s_hero {
 extern Hero hero;
 
 extern int currentFrame;
+extern SDL_Texture *hero_sheet;
 
 SDL_Texture *loadTexture(char *filename);
 void blit(SDL_Texture *texture, int x, int y);
 SDL_Texture* loadImage(const char* filename, SDL_Renderer* renderer);
+void load_hero();
 
 #define HERO_SPEED 450
 #define HERO_WIDTH 85

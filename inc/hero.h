@@ -29,9 +29,9 @@ void blit(SDL_Texture *texture, int x, int y);
 SDL_Texture* loadImage(const char* filename, SDL_Renderer* renderer);
 void load_hero();
 
-#define HERO_SPEED 450
-#define HERO_WIDTH 85
-#define HERO_HEIGHT 87
+#define HERO_SPEED 1
+#define HERO_WIDTH 47// 85
+#define HERO_HEIGHT 78//87
 #define NUM_FRAMES 6
 #define REPULSION_DISTANCE 30
 #define M_PI 3.14159265358979323846

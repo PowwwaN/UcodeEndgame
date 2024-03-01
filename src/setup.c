@@ -39,11 +39,11 @@ void render() {
 
   draw_room(current_room_array);
 
-  /* SDL_Rect hero_rect = {hero.x, hero.y, hero.width, hero.height};
-  SDL_SetRenderDrawColor(renderer, 0, 0, 255, 200); // color of a rectangle
-  SDL_RenderFillRect(
-      renderer,
-      &hero_rect); // fills rectangle with predefined size and position */
+    // SDL_Rect hero_rect = {hero.x, hero.y, hero.width, hero.height};
+    // SDL_SetRenderDrawColor(renderer, 0, 0, 255, 200); // color of a rectangle
+    // SDL_RenderFillRect(
+    //   renderer,
+    //   &hero_rect); // fills rectangle with predefined size and position 
 
   // draw enemies
   for (int i = 0; i < num_enemies; i++) {
@@ -154,49 +154,43 @@ void update() {
     room_exit_transition(&hero, &current_room_array);
     max_enemies++;
     num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
-  } else {
-    if (hero.xspeed == 0 && hero.yspeed > 0) {
-      hero.y -= hero.yspeed * delta_time * sqrt(2);
-      hero.direction = 4; // up
-      // void load_hero();
-    } else if (hero.yspeed == 0 && hero.xspeed > 0) {
-      hero.x -= hero.xspeed * delta_time * sqrt(2);
-      hero.direction = 2; // left
-      // void load_hero();
-    } else if (hero.yspeed == 0 && hero.xspeed < 0) {
-      hero.x -= hero.xspeed * delta_time * sqrt(2);
-      hero.direction = 6; // right
-      // void load_hero();
-    } else if (hero.yspeed < 0 && hero.xspeed == 0) {
-      hero.x -= hero.xspeed * delta_time * sqrt(2);
-      hero.direction = 0; // down
-      // void load_hero();
-    } else if (hero.yspeed > 0 && hero.xspeed > 0) {
-      hero.x -= hero.xspeed * delta_time;
-      hero.y -= hero.yspeed * delta_time;
-      hero.direction = 5; // up-left
-      // void load_hero();
-    } else if (hero.yspeed < 0 && hero.xspeed < 0) {
-      hero.x -= hero.xspeed * delta_time;
-      hero.y -= hero.yspeed * delta_time;
-      hero.direction = 1; // down-right
-      // void load_hero();
-    } else if (hero.yspeed < 0 && hero.xspeed > 0) {
-      hero.x -= hero.xspeed * delta_time;
-      hero.y -= hero.yspeed * delta_time;
-      hero.direction = 7; // down-left
-      // void load_hero();
-    } else if (hero.yspeed > 0 && hero.xspeed < 0) {
-      hero.x -= hero.xspeed * delta_time;
-      hero.y -= hero.yspeed * delta_time;
-      hero.direction = 3; // up-right
-      // void load_hero();
-    }else {
-      hero.x -= hero.xspeed * delta_time;
-      hero.y -= hero.yspeed * delta_time;
+   } else {
+    if (hero.xspeed == 0 && hero.yspeed != 0) {
+        hero.y -= hero.yspeed * delta_time * sqrt(2);
     }
-
+     else if (hero.yspeed == 0 && hero.xspeed != 0) {
+        hero.x -= hero.xspeed * delta_time * sqrt(2);
+    }
+    else {
+        hero.x -= hero.xspeed * delta_time ;
+        hero.y -= hero.yspeed * delta_time ;
+    }
   }
+  if (hero.xspeed == 0 && hero.yspeed > 0) {
+      hero.direction = 4; // up
+      load_hero();
+    } else if (hero.yspeed < 0 && hero.xspeed == 0) {
+      hero.direction = 0; // down
+      load_hero();
+    } if (hero.yspeed == 0 && hero.xspeed > 0) {
+      hero.direction = 6; // right
+      load_hero();
+    } else if (hero.yspeed == 0 && hero.xspeed < 0) {
+      hero.direction = 2; // left
+      load_hero();
+    } if (hero.yspeed > 0 && hero.xspeed > 0) {
+      hero.direction = 5; // up-left
+      load_hero();
+    } else if (hero.yspeed < 0 && hero.xspeed > 0) {
+      hero.direction = 7; // down-left
+      load_hero();
+    } if (hero.yspeed < 0 && hero.xspeed < 0) {
+      hero.direction = 1; // down-right
+      load_hero();
+    } else if (hero.yspeed > 0 && hero.xspeed < 0) {
+      hero.direction = 3; // up-right
+      load_hero();
+    } 
   process_bullets(delta_time);
 
   // Update the enemy position

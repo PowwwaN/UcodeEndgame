@@ -35,7 +35,6 @@ int main(int argc, char *argv[]) {
   while (game_is_running) {
     process_input();
     update();
-    load_hero();
     render();
     SDL_Rect background_rect = {0, 0, WINDOW_WIDTH,
                                 WINDOW_HEIGHT}; // background texture

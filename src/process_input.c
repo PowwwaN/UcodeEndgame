@@ -25,7 +25,6 @@ void hero_movement(void) {
   } else if (state[SDL_SCANCODE_S]) {
     hero.yspeed = -HERO_SPEED;
     hero.shoot_direction.y = 1;
-    hero.direction = 0;
   } else {
     hero.yspeed = 0;
     hero.shoot_direction.y = 0;

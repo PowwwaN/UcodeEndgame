@@ -28,7 +28,7 @@ void normalize(float *dx, float *dy);
 void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy, time_t *last_attack_time, bool *timer_active);
 
 int draw_enemy(Enemy *enemies, int num_enemies, int max_enemies);
-#define MAX_ENEMIES 5
+#define MAX_ENEMIES 1
 #define ENEMY_WIDTH 60
 #define ENEMY_HEIGHT 60
 #define ENEMY_SPEED 200

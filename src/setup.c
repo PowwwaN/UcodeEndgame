@@ -89,10 +89,11 @@ void render() {
         }
     }
 
-    if (difftime(time(NULL), last_attack_time) < 1.0) {
+    if (difftime(current_time, last_attack_time) < 1.0 && hero.attacked) {
         SDL_SetTextureColorMod(hero.texture, 255, 0, 0);
     } else {
         SDL_SetTextureColorMod(hero.texture, 255, 255, 255);
+        hero.attacked = false;
     }
     blit(hero.texture, hero.x, hero.y);
 

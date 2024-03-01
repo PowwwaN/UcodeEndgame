@@ -35,6 +35,10 @@ void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy, time_t *las
 
                 // Update last attack time
                 *last_attack_time = time(NULL);
+
+                hero->attacked = true;
+
+                printf("Hero HP: %d\n", hero->hp);
             }
         } else {
             *timer_active = false;

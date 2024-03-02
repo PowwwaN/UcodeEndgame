@@ -4,7 +4,7 @@
 #include "../inc/enemy.h"
 #include <math.h>
 
-
+int counter;
 
 // function to set random enemy position on map edge
 void set_enemy_random_position(float screen_width, float screen_height, Enemy *enemy) {
@@ -113,6 +113,7 @@ void update_enemy_position(Enemy *enemy, Hero *hero, float speed, float delta_ti
 
 int draw_enemy(Enemy *enemies, int num_enemies, int max_enemies) {
     num_enemies = 0;
+    counter = 0;
     for (int i = num_enemies; i < max_enemies; i++) {
         enemies[i].width = ENEMY_WIDTH;
         enemies[i].height = ENEMY_HEIGHT;
@@ -126,15 +127,15 @@ int draw_enemy(Enemy *enemies, int num_enemies, int max_enemies) {
             enemies[i].damage = 1;
         } else if (enemies[i].type == 1) {
             enemies[i].hp = 2;
-            enemies[i].damage = 2;
+            enemies[i].damage = 1;
         } else if (enemies[i].type == 2) {
             enemies[i].hp = 3;
-            enemies[i].damage = 3;
+            enemies[i].damage = 1;
         }
 
         set_enemy_random_position(WINDOW_WIDTH, WINDOW_HEIGHT, &enemies[i]);
         num_enemies++;
+        counter++;
     }
-    printf("num_enemies: %d\n", num_enemies);
     return num_enemies;
 }

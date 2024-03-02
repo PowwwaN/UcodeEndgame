@@ -15,7 +15,10 @@ bool exit_delay_active = false;
 int exit_delay_duration = 1000;
 int exit_delay_start_time = 0;
 
-bool open_door = false;
+int killed_enemies;
+int room_counter = 0;
+
+int counter;
 
 void setup() {
 
@@ -36,6 +39,7 @@ void setup() {
 
     //    randomize enemies
     srand(time(NULL));
+
 
 
 }
@@ -103,11 +107,6 @@ void render() {
 
 
     // Перевірка колізії куль із ворогами
-
-
-
-
-
     bullet = bullets_list;
     while (bullet != NULL) {
         if (bullet->active) {
@@ -119,6 +118,8 @@ void render() {
                         // Обробка колізії кулі та ворога тут
                         if (enemies[i].hp == 1) {
                             enemies[i].active = false;// Ворог знищений
+                            killed_enemies++;
+                            printf("killed_enemies = %d\n", killed_enemies);
                         }
                         enemies[i].hp--; // зменшення здоров'я ворога
                         bullet->active = false; // Куля видалена
@@ -139,7 +140,6 @@ void render() {
             num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
             max_enemies++;
             exit_delay_active = false;
-            printf("num_enemies: %d\n", num_enemies);
         }
     }
     // shows renderer
@@ -176,19 +176,19 @@ void update() {
             hero.xspeed = 0;
             hero.yspeed = 0;
         }
-    } else if ((is_object == 3 || is_object == 2) && open_door == true) {
-        room_exit_transition(&hero, &current_room_array);
-        num_enemies = 0;
-        exit_delay_active = true;
-        exit_delay_start_time = SDL_GetTicks();
-        // deleting all bullets after transition
-        struct s_bullet *bullet = bullets_list;
-        while (bullet != NULL) {
-            if (bullet->active) {
-                bullet->active = false;
-            }
-            bullet = bullet->next_bullet;
+    } else if ((is_object == 3 || is_object == 2)) {
+        if (killed_enemies >= counter || room_counter == 0) {
+            room_exit_transition(&hero, &current_room_array);
+            killed_enemies = 0;
+            exit_delay_active = true;
+            exit_delay_start_time = SDL_GetTicks();
+            num_enemies++;
+            room_counter++;
+        } else {
+            hero.xspeed = 0;
+            hero.yspeed = 0;
         }
+
     } else {
         if (hero.xspeed == 0 && hero.yspeed != 0) {
             hero.y -= hero.yspeed * delta_time * sqrt(2);

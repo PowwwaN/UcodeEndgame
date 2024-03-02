@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
             case game_state_playing: {
                 init_cursor(&cursor, renderer);
 
-                load_game_music();
+//                load_game_music();
                 setup();
                 while (game_state == game_state_playing) {
                     update_cursor(&cursor);

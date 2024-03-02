@@ -4,7 +4,6 @@ Enter the Matrix is a roguelike game inspired by Vampire Survivor and Enter the 
 
 ## Features
 
-- Procedurally generated levels
 - Various enemies to encounter
 - Matrix-themed visuals and soundtrack
 

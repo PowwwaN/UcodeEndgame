@@ -1,14 +1,24 @@
 NAME = game
 CC = clang
 CFLAGS = -Wall -std=c99
-LIBS = -L/opt/homebrew/Cellar/sdl2/2.30.0/lib -lSDL2 -lSDL2_ttf -lSDL2_mixer -L/opt/homebrew/Cellar/sdl2_image/2.8.2/lib -lSDL2_image -lm
+LIBS = -L/opt/homebrew/Cellar/sdl2/2.30.0/lib \
+       -lSDL2 \
+       -L/opt/homebrew/Cellar/sdl2_image/2.8.2/lib \
+       -lSDL2_image \
+       -L/opt/homebrew/Cellar/sdl2_ttf/2.22.0/lib \
+       -lSDL2_ttf \
+       -L/opt/homebrew/Cellar/sdl2_mixer/2.8.0/lib \
+       -lSDL2_mixer \
+       -lm
 
 # Specify include directories for SDL2 and SDL2_image headers
 INC_DIR = /opt/homebrew/Cellar/sdl2/2.30.0/include
 IMG_INC_DIR = /opt/homebrew/Cellar/sdl2_image/2.8.2/include
+TTF_INC_DIR = /opt/homebrew/Cellar/sdl2_ttf/2.22.0/include
+MIXER_INC_DIR = /opt/homebrew/Cellar/sdl2_mixer/2.8.0/include
 
 # Make sure to include the correct directories for SDL2 and SDL2_image headers
-INCS = -I$(INC_DIR) -I$(IMG_INC_DIR)
+INCS = -I$(INC_DIR) -I$(IMG_INC_DIR) -I$(TTF_INC_DIR) -I$(MIXER_INC_DIR) -I/opt/homebrew/Cellar/sdl2/2.30.0/include/SDL2
 
 SRC_DIR = src/
 OBJ_DIR = obj/
@@ -30,8 +40,7 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR)
 # Rule to link object files into the executable
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
-	rm -rf $(OBJ_DIR)
-	
+
 run: $(NAME)
 	./$(NAME)
 

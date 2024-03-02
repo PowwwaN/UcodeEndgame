@@ -11,6 +11,12 @@ bool hero_invincible = false;
 bool timer_active = false;
 bool was_attacked = false;
 
+bool exit_delay_active = false;
+int exit_delay_duration = 1000;
+int exit_delay_start_time = 0;
+
+bool open_door = false;
+
 void setup() {
 
     hero.x = WINDOW_WIDTH / 2;      // positition of rectangle by x axis
@@ -31,9 +37,6 @@ void setup() {
     //    randomize enemies
     srand(time(NULL));
 
-    // initialize enemies
-    max_enemies = 0;
-    num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
 
 }
 
@@ -54,17 +57,28 @@ void render() {
         }
     }
 
+    time_t current_time = time(NULL);
+
     for (int i = 0; i < num_enemies; ++i) {
         if (enemies[i].active && hero.active && hero.hp > 0) {
-            if (!hero_invincible) {
-                check_enemy_collision_and_repel(&hero, &enemies[i], &last_attack_time, &timer_active);
+            // checking collision
+            if (SDL_HasIntersection(&(SDL_Rect){hero.x, hero.y, HERO_WIDTH, HERO_HEIGHT},
+                                    &(SDL_Rect){enemies[i].x, enemies[i].y, ENEMY_WIDTH, ENEMY_HEIGHT})) {
+                // checking attack time
+                if (difftime(current_time, last_attack_time) >= 1.0) {
+                    if (hero.hp > 0) {
+                        // pushing hero
+                        check_enemy_collision_and_repel(&hero, &enemies[i], &last_attack_time, &timer_active);
+
+                        // changing time
+                        last_attack_time = current_time;
+                    }
+                }
             }
         } else if (hero.hp <= 0) {
             hero.active = false;
-            game_state = game_state_gameover;
         }
     }
-
     if (difftime(time(NULL), last_attack_time) < 1.0) {
         SDL_SetTextureColorMod(idle_sheet, 255, 0, 0);
         SDL_SetTextureColorMod(hero_sheet, 255, 0, 0);
@@ -104,7 +118,7 @@ void render() {
                     if (SDL_HasIntersection(&bullet_rect, &enemy_rect)) {
                         // Обробка колізії кулі та ворога тут
                         if (enemies[i].hp == 1) {
-                            enemies[i].active = false; // Ворог знищений
+                            enemies[i].active = false;// Ворог знищений
                         }
                         enemies[i].hp--; // зменшення здоров'я ворога
                         bullet->active = false; // Куля видалена
@@ -117,6 +131,17 @@ void render() {
 
     }
     render_hp_bar(hero.hp);
+
+    if (exit_delay_active) {
+        int current_time = SDL_GetTicks();
+        // check if delay is over
+        if (current_time - exit_delay_start_time >= exit_delay_duration) {
+            num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
+            max_enemies++;
+            exit_delay_active = false;
+            printf("num_enemies: %d\n", num_enemies);
+        }
+    }
     // shows renderer
     SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
@@ -151,10 +176,11 @@ void update() {
             hero.xspeed = 0;
             hero.yspeed = 0;
         }
-    } else if (is_object == 3 || is_object == 2) {
+    } else if ((is_object == 3 || is_object == 2) && open_door == true) {
         room_exit_transition(&hero, &current_room_array);
-        max_enemies++;
-        num_enemies = draw_enemy(enemies, num_enemies, max_enemies);
+        num_enemies = 0;
+        exit_delay_active = true;
+        exit_delay_start_time = SDL_GetTicks();
         // deleting all bullets after transition
         struct s_bullet *bullet = bullets_list;
         while (bullet != NULL) {

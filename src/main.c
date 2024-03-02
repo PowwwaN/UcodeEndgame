@@ -106,7 +106,8 @@ int main(int argc, char *argv[]) {
                     game_state = game_state_menu;
                 }
                 case game_state_loading: {
-                    render_loading();
+//                    render_loading();
+                        game_state = game_state_playing;
                 }
             }
         }

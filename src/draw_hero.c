@@ -22,8 +22,8 @@ void blit(SDL_Texture *texture, int x, int y)
 {
 	SDL_Rect dest;
 
-	dest.x = x - 42;
-	dest.y = y - 24;
+	dest.x = x;
+	dest.y = y;
 	SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
 
 	SDL_RenderCopy(renderer, texture, NULL, &dest);

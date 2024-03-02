@@ -19,9 +19,11 @@ struct s_bullet {
   struct s_bullet* next_bullet;
   struct s_bullet* previous_bullet;
   bool active;
-  SDL_Texture *texture;
 };
 extern struct s_bullet* bullets_list;
 
-#define BULLET_SPEED 500
+// extern SDL_Texture *bullet_textures;
+
+
+#define BULLET_SPEED 800
 #endif

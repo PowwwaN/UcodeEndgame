@@ -1,4 +1,5 @@
 #include "../inc/minilibmx.h"
+#include "../inc/bullet.h"
 
 
 void process_bullets(float delta_time){
@@ -78,3 +79,6 @@ void create_bullet(void){
     }
     bullets_list = new_bullet_ptr;
 }
+
+
+

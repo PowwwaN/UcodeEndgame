@@ -12,21 +12,33 @@ void set_enemy_random_position(float screen_width, float screen_height, Enemy *e
     int edge = rand() % 4;
 
     switch (edge) {
-        case 0: // top edge
-            enemy->x = (float) (rand() % ((int) screen_width - (TILE_SIZE * 2)) + TILE_SIZE);
-            enemy->y = 0 + ((ENEMY_HEIGHT / 2) + TILE_SIZE);
+        case 0: // верхний край
+            do {
+                enemy->x = (float) (rand() % ((int) screen_width - (TILE_SIZE * 2)) + TILE_SIZE);
+                enemy->y = 0 + ((ENEMY_HEIGHT / 2) + TILE_SIZE * 1.5);
+            } while (enemy->x > hero.x - ENEMY_WIDTH * 1.5 && enemy->x < hero.x + HERO_WIDTH * 1.5 &&
+                     enemy->y > hero.y - ENEMY_HEIGHT * 1.5 && enemy->y < hero.y + HERO_HEIGHT * 1.5);
             break;
-        case 1: // right edge
-            enemy->x = screen_width - (ENEMY_WIDTH + (ENEMY_WIDTH / 2) + TILE_SIZE);
-            enemy->y = (float) (rand() % ((int) screen_height - (TILE_SIZE * 2)) + TILE_SIZE);
+        case 1: // правый край
+            do {
+                enemy->x = screen_width - (ENEMY_WIDTH + (ENEMY_WIDTH / 2) + TILE_SIZE * 1.5);
+                enemy->y = (float) (rand() % ((int) screen_height - (TILE_SIZE * 2)) + TILE_SIZE);
+            } while (enemy->x > hero.x - ENEMY_WIDTH * 1.5 && enemy->x < hero.x + HERO_WIDTH * 1.5 &&
+                     enemy->y > hero.y - ENEMY_HEIGHT * 1.5 && enemy->y < hero.y + HERO_HEIGHT * 1.5);
             break;
-        case 2: // bot edge
-            enemy->x = (float) (rand() % ((int) screen_width - (TILE_SIZE * 2)) + TILE_SIZE);
-            enemy->y = screen_height - (ENEMY_HEIGHT + (ENEMY_HEIGHT / 2) + TILE_SIZE);
+        case 2: // нижний край
+            do {
+                enemy->x = (float) (rand() % ((int) screen_width - (TILE_SIZE * 2)) + TILE_SIZE);
+                enemy->y = screen_height - (ENEMY_HEIGHT + (ENEMY_HEIGHT / 2) + TILE_SIZE * 1.5);
+            } while (enemy->x > hero.x - ENEMY_WIDTH * 1.5 && enemy->x < hero.x + HERO_WIDTH * 1.5 &&
+                     enemy->y > hero.y - ENEMY_HEIGHT * 1.5 && enemy->y < hero.y + HERO_HEIGHT * 1.5);
             break;
-        case 3: // left edge
-            enemy->x = 0 + ((ENEMY_WIDTH / 2) + TILE_SIZE);
-            enemy->y = (float) (rand() % ((int) screen_height - (TILE_SIZE * 2)) + TILE_SIZE);
+        case 3: // левый край
+            do {
+                enemy->x = 0 + ((ENEMY_WIDTH / 2) + TILE_SIZE * 1.5);
+                enemy->y = (float) (rand() % ((int) screen_height - (TILE_SIZE * 2)) + TILE_SIZE);
+            } while (enemy->x > hero.x - ENEMY_WIDTH * 1.5 && enemy->x < hero.x + HERO_WIDTH * 1.5 &&
+                     enemy->y > hero.y - ENEMY_HEIGHT * 1.5 && enemy->y < hero.y + HERO_HEIGHT * 1.5);
             break;
     }
 }
@@ -100,6 +112,7 @@ void update_enemy_position(Enemy *enemy, Hero *hero, float speed, float delta_ti
 
 int draw_enemy(Enemy *enemies, int num_enemies, int max_enemies) {
     num_enemies = 0;
+    counter = 0;
     for (int i = num_enemies; i < max_enemies; i++) {
         enemies[i].width = ENEMY_WIDTH;
         enemies[i].height = ENEMY_HEIGHT;
@@ -113,14 +126,15 @@ int draw_enemy(Enemy *enemies, int num_enemies, int max_enemies) {
             enemies[i].damage = 1;
         } else if (enemies[i].type == 1) {
             enemies[i].hp = 2;
-            enemies[i].damage = 2;
+            enemies[i].damage = 1;
         } else if (enemies[i].type == 2) {
             enemies[i].hp = 3;
-            enemies[i].damage = 3;
+            enemies[i].damage = 1;
         }
 
         set_enemy_random_position(WINDOW_WIDTH, WINDOW_HEIGHT, &enemies[i]);
         num_enemies++;
+        counter++;
     }
     return num_enemies;
 }

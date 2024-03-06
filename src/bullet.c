@@ -80,5 +80,14 @@ void create_bullet(void){
     bullets_list = new_bullet_ptr;
 }
 
+SDL_Texture **add_bullet_textures(void) {
+    SDL_Texture **textures = malloc(sizeof(SDL_Texture *) * AMOUNT_OF_BULLET_TEXTURES);
+    for (int i = 1; i <= AMOUNT_OF_BULLET_TEXTURES; i++) {
+        char filePath[255];
+        sprintf(filePath, "resource/bullets/%d.png", i);
+        textures[i] = loadTexture(filePath);
+    }
+    return textures;
+}
 
 

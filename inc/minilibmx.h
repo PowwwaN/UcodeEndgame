@@ -20,6 +20,8 @@
 #include "bullet.h"
 #include "cursor.h"
 #include "menu.h"
+#include "hp_bar.h"
+#include "game_state.h"
 
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
@@ -29,11 +31,13 @@
 
 int initialize_window(void);
 void setup(void);
+void load_game_music(void);
 void process_input(void);
 void update(void);
 void render(void);
 void destroy_window(void);
 void hero_movement(void);
+void render_hp_bar(int hero_hp);
 
 SDL_Texture *loadTexture(char *filename);
 

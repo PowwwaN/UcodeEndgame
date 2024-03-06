@@ -36,6 +36,8 @@ void handleMouseButtonDown(SDL_Event e, t_menu_data *menu_data, bool *menu_is_ru
         if (SDL_PointInRect(&((SDL_Point) {x, y}), &menu_data->startButton.rect)) {
             menu_data->startButton.onClick();
             *menu_is_running = false;
+            game_state = game_state_loading;
+            next_game_state = game_state_playing;
             Mix_HaltMusic();
             Mix_FreeMusic(menu_data->menu_music);
             clear_button_textures(menu_data);

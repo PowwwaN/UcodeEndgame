@@ -19,6 +19,9 @@ typedef struct s_enemy {
 } Enemy;
 extern  Enemy enemy;
 
+extern int counter;
+extern int killed_enemies;
+
 extern SDL_Texture *enemy_sheet1;
 extern SDL_Texture *enemy_sheet2;
 extern SDL_Texture *enemy_sheet3;
@@ -31,7 +34,7 @@ void render_enemy(SDL_Renderer *renderer, Enemy *enemy);
 void normalize(float *dx, float *dy);
 void check_enemy_collision_and_repel(Hero *hero, const Enemy *enemy, time_t *last_attack_time, bool *timer_active);
 int draw_enemy(Enemy *enemies, int num_enemies, int max_enemies);
-#define MAX_ENEMIES 0
+#define MAX_ENEMIES 5
 #define ENEMY_WIDTH 60
 #define ENEMY_HEIGHT 60
 #define ENEMY_SPEED 200

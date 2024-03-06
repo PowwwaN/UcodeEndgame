@@ -1,13 +1,17 @@
 #include "../inc/minilibmx.h"
 #include "../inc/room_generator.h"
-
-void drawWall(int x, int y) {
+// void drawWall(int x, int y) {
+//     SDL_Rect wall_rect = {x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
+//     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+//     SDL_RenderFillRect(
+//             renderer,
+//             &wall_rect);
+// }
+void drawWall(int x, int y, SDL_Texture* wall_texture) {
     SDL_Rect wall_rect = {x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
-    SDL_RenderFillRect(
-            renderer,
-            &wall_rect);
+    SDL_RenderCopy(renderer, wall_texture, NULL, &wall_rect);
 }
+
 void drawFloor(int x, int y) {
     SDL_Rect floor_rect = {x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
     SDL_SetRenderDrawColor(renderer, 0, 50, 50, 200);
@@ -15,20 +19,28 @@ void drawFloor(int x, int y) {
             renderer,
             &floor_rect);
 }
-void drawEntry(int x, int y) {
+// void drawEntry(int x, int y) {
+//     SDL_Rect entry_rect = {x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
+//     SDL_SetRenderDrawColor(renderer, 0, 0, 30, 200);
+//     SDL_RenderFillRect(
+//             renderer,
+//             &entry_rect);
+// }
+void drawEntry(int x, int y, SDL_Texture* wall_entry_texture) {
     SDL_Rect entry_rect = {x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
-    SDL_SetRenderDrawColor(renderer, 0, 0, 30, 200);
-    SDL_RenderFillRect(
-            renderer,
-            &entry_rect);
+    SDL_RenderCopy(renderer, wall_entry_texture, NULL, &entry_rect);
 }
 
-void drawExit(int x, int y) {
+// void drawExit(int x, int y) {
+//     SDL_Rect entry_rect = {x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
+//     SDL_SetRenderDrawColor(renderer, 50, 0, 100, 200);
+//     SDL_RenderFillRect(
+//             renderer,    
+//             &entry_rect);
+// }
+void drawExit(int x, int y, SDL_Texture* wall_exit_texture) {
     SDL_Rect entry_rect = {x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
-    SDL_SetRenderDrawColor(renderer, 50, 0, 100, 200);
-    SDL_RenderFillRect(
-            renderer,
-            &entry_rect);
+    SDL_RenderCopy(renderer, wall_exit_texture, NULL, &entry_rect);
 }
 
 
@@ -46,16 +58,15 @@ void draw_room(t_array_represantation_of_the_room room_representation) {
  //                   drawFloor(x, y);
                     break;
                 case 9: // Wall
-                    drawWall(x, y);
+                    drawWall(x, y, wall_texture);
                     break;
                 case 1: // Entry
-                    drawEntry(x, y);
+                    drawEntry(x, y, wall_entry_texture);
                     break;
                 case 2: // Exit
-                    drawExit(x, y);
+                    drawExit(x, y, wall_exit_texture);
                     break;
             }
         }
     }
 }
-

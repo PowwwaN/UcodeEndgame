@@ -22,8 +22,10 @@ struct s_bullet {
 };
 extern struct s_bullet* bullets_list;
 
+SDL_Texture **add_bullet_textures(void);
+#define AMOUNT_OF_BULLET_TEXTURES 8
+extern SDL_Texture **bullet_textures;
 // extern SDL_Texture *bullet_textures;
-
 
 #define BULLET_SPEED 500
 #endif

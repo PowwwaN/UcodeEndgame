@@ -30,6 +30,7 @@ SDL_Texture *loadTexture(char *filename);
 void blit(SDL_Texture *texture, int x, int y);
 SDL_Texture* loadImage(const char* filename, SDL_Renderer* renderer);
 void load_hero(int action, int numFrames); // 0 idle / 1 walking / 2 enemies /
+void update_hero_animation();
 
 #define HERO_SPEED 250
 #define HERO_WIDTH 47
